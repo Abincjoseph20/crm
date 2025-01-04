@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+{% block nav %}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        Customer Details
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ fom.f_name }} {{ fom.l_name }}</h5>
+        <p class="card-text"><strong>Phone Number:</strong> {{ fom.phone_num }}</p>
+        <p class="card-text"><strong>Product:</strong> {{ fom.product }}</p>
+        <p class="card-text"><strong>Bank:</strong> {{ fom.bank }}</p>
+        <p class="card-text"><strong>Status:</strong> {{ fom.status }}</p>
+        <p class="card-text"><strong>Type:</strong> {{ fom.type }}</p>
+        <a href="{% url 'edit' fom.pk %}" class="btn btn-warning">Edit</a>
+        <a href="{% url 'delete' fom.pk %}" class="btn btn-danger">Delete</a>
+        <a href="{% url 'list' %}" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+<h1>Create Customer</h1>
+<form method="post" action="{% url 'create_customer' %}">
+    {% csrf_token %}
+    <a href="{% url 'list' %}" class="btn btn-secondary mb-3">Back to List</a>
+
+    <div class="form-group">
+        <label for="f_name" class="form-label">First Name:</label>
+        <input type="text" id="f_name" name="f_name" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="l_name" class="form-label">Last Name:</label>
+        <input type="text" id="l_name" name="l_name" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="phone_num" class="form-label">Phone Number:</label>
+        <input type="text" id="phone_num" name="phone_num" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="product" class="form-label">Product:</label>
+        <select id="product" name="product" class="form-control" required>
+            <option value="" disabled selected>Select Product</option>
+            {% for code, name in product_choices %}
+                <option value="{{ code }}">{{ name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="bank" class="form-label">Bank:</label>
+        <select id="bank" name="bank" class="form-control" required>
+            <option value="" disabled selected>Select Bank</option>
+            {% for code, name in bank_choices %}
+                <option value="{{ code }}">{{ name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="status" class="form-label">Status:</label>
+        <select id="status" name="status" class="form-control" required>
+            <option value="" disabled selected>Select Status</option>
+            {% for code, name in status_choices %}
+                <option value="{{ code }}">{{ name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Type:</label>
+        <div>
+            <input type="radio" id="type_dsa" name="type" value="DSA" checked> DSA
+            <input type="radio" id="type_self" name="type" value="SELF"> Self
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="dsa_name" class="form-label">DSA Name:</label>
+        <input type="text" id="dsa_name" name="dsa_name" class="dsa-field form-control" disabled>
+    </div>
+    <div class="form-group">
+        <label for="dsa_number" class="form-label">DSA Number:</label>
+        <input type="text" id="dsa_number" name="dsa_number" class="dsa-field form-control" disabled>
+    </div>
+    <div class="form-group">
+        <label for="dsa_connector_code" class="form-label">DSA Connector Code:</label>
+        <input type="text" id="dsa_connector_code" name="dsa_connector_code" class="dsa-field form-control" disabled>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<script>
+    // Function to enable DSA fields
+    function enableDSAFields(dsaFields) {
+        dsaFields.forEach(field => {
+            field.removeAttribute('disabled');
+            field.classList.remove('non-active');
+            field.classList.add('active');
+        });
+    }
+
+    // Function to disable DSA fields
+    function disableDSAFields(dsaFields) {
+        dsaFields.forEach(field => {
+            field.setAttribute('disabled', 'disabled');
+            field.classList.remove('active');
+            field.classList.add('non-active');
+        });
+    }
+
+    // Function to toggle active/non-active state of DSA fields
+    function toggleDSAFields() {
+        const type = document.querySelector('input[name="type"]:checked').value;
+        const dsaFields = document.querySelectorAll('.dsa-field');
+
+        if (type === 'DSA') {
+            enableDSAFields(dsaFields);
+        } else {
+            disableDSAFields(dsaFields);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const typeRadios = document.querySelectorAll('input[name="type"]');
+        typeRadios.forEach(radio => {
+            radio.addEventListener('change', toggleDSAFields);
+        });
+
+        toggleDSAFields(); // Initial check
+    });
+</script>
+{% endblock %}

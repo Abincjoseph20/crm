@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+
+{% block nav %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Delete Customer</h1>
+    <p>Are you sure you want to delete {{ customer.f_name }} {{ customer.l_name }}?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, delete</button>
+        <a href="{% url 'details' customer.id %}">Cancel</a>
+    </form>
+</div>
+{% endblock %}
+
