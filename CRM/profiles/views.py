@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect,get_object_or_404
-from .models import Customer, BANK_CHOICE, PRODUCT_CHOICE, STATUS_CHOICES, TYPE_CHOICES
+from django.shortcuts import render, redirect,get_object_or_404,HttpResponse
+from .models import Customer,DSA, BANK_CHOICE, PRODUCT_CHOICE, STATUS_CHOICES, TYPE_CHOICES
 from django.views import View
 
 def create_customer(request):
@@ -12,12 +12,15 @@ def create_customer(request):
         bank = request.POST.get('bank')
         status = request.POST.get('status')
         type = request.POST.get('type')
-        dsa_name = request.POST.get('dsa_name')
-        dsa_number = request.POST.get('dsa_number')
-        dsa_connector_code = request.POST.get('dsa_connector_code')
+        dsa_id = request.POST.get('dsa')  # Get selected DSA ID
+        
+        if type == 'DSA' and dsa_id:
+            dsa = DSA.objects.get(id=dsa_id)  # Get the DSA if it exists
+        else:
+            dsa = None 
 
         # Create and save a new Customer instance
-        customer = Customer(
+        customer = Customer.objects.create(
             f_name=f_name,
             l_name=l_name,
             phone_num=phone_num,
@@ -25,18 +28,18 @@ def create_customer(request):
             bank=bank,
             status=status,
             type=type,
-            dsa_name=dsa_name if type == 'DSA' else '',
-            dsa_number=dsa_number if type == 'DSA' else '',
-            dsa_connector_code=dsa_connector_code if type == 'DSA' else ''
+            dsa=dsa
         )
         customer.save()
 
         return redirect('list')
-
+    
+    dsa_list = DSA.objects.all()
     context = {
         'bank_choices': BANK_CHOICE,
         'product_choices': PRODUCT_CHOICE,
-        'status_choices': STATUS_CHOICES
+        'status_choices': STATUS_CHOICES,
+        'dsa_list': dsa_list
     }
     return render(request, 'create.html', context)
 
@@ -47,10 +50,10 @@ def customer_list(request):
     return render(request, 'list.html', {'customers': customers})
 
 
-
 def details(request,pk):
     fom = get_object_or_404(Customer,pk=pk)
     return render(request,'details.html',{'fom':fom})
+
 
 def edit_customer(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
@@ -86,19 +89,52 @@ def delete(request, pk):
     return render(request, 'delete.html', {'customer': customer})
 
 
-class Category(View):
+class Bank_Category(View):
     def get(self, request, val):
-        customers = Customer.objects.filter(product=val)  
+        customers = Customer.objects.filter(bank=val)  
         titles = customers.values('f_name', 'l_name')  
-        return render(request, 'category.html', {'customers': customers, 'titles': titles})
-
-
-class CategoryTitle(View):
-    def get(self, request, val):
-        customers = Customer.objects.filter(f_name=val)
-        if customers:
-            titles = Customer.objects.filter(product=customers[0].product).values('f_name', 'l_name')
-        else:
-            titles = None
-        return render(request, 'category.html', {'customers': customers, 'titles': titles})
+        return render(request, 'Bank_category.html', {'customers': customers, 'titles': titles})
     
+    
+class Pdoduct_Catogory(View):
+    def get(self,request,val):
+        product = Customer.objects.filter(product=val)
+        titles = product.values('f_name','l_name')
+        return render(request,'Product_catogory.html',{'product': product, 'titles': titles})
+
+    
+def search(request):
+    if 'keyword' in request.GET:
+        keyword = request.GET['keyword']
+        if keyword:
+            customers = Customer.objects.order_by('-created_date').filter(f_name__icontains=keyword)
+        else:
+            return redirect('list')
+    context = {
+        'customers': customers,
+    }
+    return render(request,'list.html',context)
+
+
+
+def dsa(request):
+    context = {}
+    if request.method == 'POST':
+        dsa_name = request.POST.get('dsa_name')
+        dsa_code = request.POST.get('dsa_code')
+        dsa_phone_number = request.POST.get('dsa_phone_number')
+        
+        DSA.objects.create(
+            dsa_name=dsa_name,
+            dsa_code=dsa_code,
+            dsa_phone_number=dsa_phone_number,
+        )
+        return redirect('dsa_list')
+    
+    return render(request,'dsa_create.html',context)
+
+
+def dsa_lis(request):
+    dsa = DSA.objects.all()
+    return render(request,'dsa_list.html',{'dsa':dsa})
+        

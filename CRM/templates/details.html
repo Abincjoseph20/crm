@@ -15,6 +15,10 @@
         <p class="card-text"><strong>Bank:</strong> {{ fom.bank }}</p>
         <p class="card-text"><strong>Status:</strong> {{ fom.status }}</p>
         <p class="card-text"><strong>Type:</strong> {{ fom.type }}</p>
+        <p class="card-text"><strong>DSA Name:</strong> {{ fom.dsa_name}}</p>
+        <p class="card-text"><strong>DSA Number:</strong> {{ fom.dsa_number}}</p>
+        <p class="card-text"><strong>DSA connector code:</strong> {{ fom.dsa_connector_code}}</p>
+
         <a href="{% url 'edit' fom.pk %}" class="btn btn-warning">Edit</a>
         <a href="{% url 'delete' fom.pk %}" class="btn btn-danger">Delete</a>
         <a href="{% url 'list' %}" class="btn btn-secondary">Back to List</a>

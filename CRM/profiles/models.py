@@ -1,5 +1,18 @@
 from django.db import models
-# Create your models here.
+# # Create your models here.
+
+
+
+
+
+class DSA(models.Model):
+    dsa_name = models.CharField(max_length=50)
+    dsa_code = models.CharField(max_length=50)
+    dsa_phone_number = models.IntegerField()
+    created_date = models.DateField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.dsa_name
 
 
 BANK_CHOICE = (
@@ -31,7 +44,6 @@ TYPE_CHOICES = (
     ('SELF', 'Self')
 )
 
-
 class Customer(models.Model):
     f_name = models.CharField(max_length=50)
     l_name = models.CharField(max_length=50)
@@ -41,10 +53,11 @@ class Customer(models.Model):
     
     status = models.CharField(choices=STATUS_CHOICES, max_length=20)
     type = models.CharField(choices=TYPE_CHOICES, max_length=4)
-    dsa_name = models.CharField(max_length=50, blank=True, null=True)
-    dsa_number = models.CharField(max_length=15, blank=True, null=True)
-    dsa_connector_code = models.CharField(max_length=50, blank=True, null=True)
-    
+    dsa = models.ForeignKey(DSA, on_delete=models.SET_NULL, null=True, blank=True)
+    created_date = models.DateField(auto_now_add=True)
     
     def __str__(self):
         return f"{self.f_name} {self.l_name}"
+    
+    
+

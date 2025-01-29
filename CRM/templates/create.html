@@ -54,18 +54,13 @@
             <input type="radio" id="type_self" name="type" value="SELF"> Self
         </div>
     </div>
-    <div class="form-group">
-        <label for="dsa_name" class="form-label">DSA Name:</label>
-        <input type="text" id="dsa_name" name="dsa_name" class="dsa-field form-control" disabled>
-    </div>
-    <div class="form-group">
-        <label for="dsa_number" class="form-label">DSA Number:</label>
-        <input type="text" id="dsa_number" name="dsa_number" class="dsa-field form-control" disabled>
-    </div>
-    <div class="form-group">
-        <label for="dsa_connector_code" class="form-label">DSA Connector Code:</label>
-        <input type="text" id="dsa_connector_code" name="dsa_connector_code" class="dsa-field form-control" disabled>
-    </div>
+    <label for="dsa">Select DSA:</label>
+    <select name="dsa" id="dsa" class="form-control">
+        <option value="">--- Select DSA ---</option>
+        {% for dsa in dsa_list %}
+            <option value="{{ dsa.id }}">{{ dsa.dsa_name }},{{dsa.dsa_phone_number}}</option>
+        {% endfor %}
+    </select>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
@@ -92,11 +87,14 @@
     function toggleDSAFields() {
         const type = document.querySelector('input[name="type"]:checked').value;
         const dsaFields = document.querySelectorAll('.dsa-field');
+        const dsaSelect = document.getElementById('dsa');
 
         if (type === 'DSA') {
             enableDSAFields(dsaFields);
+            dsaSelect.style.display = 'block'; // Show DSA select
         } else {
             disableDSAFields(dsaFields);
+            dsaSelect.style.display = 'none'; // Hide DSA select
         }
     }
 
@@ -109,4 +107,5 @@
         toggleDSAFields(); // Initial check
     });
 </script>
+
 {% endblock %}

@@ -96,17 +96,25 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="{% url 'list' %}">Home <span class="sr-only"></span></a>
                 </li>
+                <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'dsa_create' %}">DSA <span class="sr-only"></span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'dsa_list' %}">DSA List<span class="sr-only"></span></a>
+            </li>
+            
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle text-primary-custom" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       <i class="fas fa-list">Product</i>
                   </a>
                   <ul class="dropdown-menu">
-                      <li><a class="dropdown-item text-dark-custom" href=""><i></i>HL</a></li>
-                      <li><a class="dropdown-item text-dark-custom" href="#"><i></i>PL</a></li>
-                      <li><a class="dropdown-item text-dark-custom" href="#"><i></i>BL</a></li>
-                      <li><a class="dropdown-item text-dark-custom" href="#"><i></i>CL</a></li>
+                      <li><a class="dropdown-item text-dark-custom" href="{% url 'product_catogory'  'HL' %}"><i></i>HL</a></li>
+                      <li><a class="dropdown-item text-dark-custom" href="{% url 'product_catogory'  'PL' %}"><i></i>PL</a></li>
+                      <li><a class="dropdown-item text-dark-custom" href="{% url 'product_catogory'  'CL' %}"><i></i>BL</a></li>
+                      <li><a class="dropdown-item text-dark-custom" href="{% url 'product_catogory'  'BL' %}"><i></i>CL</a></li>
+                      <li><a class="dropdown-item text-dark-custom" href="{% url 'product_catogory'  'RF' %}"><i></i>RF</a></li>
                   </ul>
               </li>
 
@@ -122,8 +130,8 @@
                   </ul>
               </li>
             </ul>
-            <form class="d-flex" method="GET" action="#">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
+            <form class="d-flex" method="GET" action="{% url 'search' %}">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
         </div>

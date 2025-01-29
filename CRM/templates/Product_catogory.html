@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block nav %}
+{% endblock %}
+
+{% block content %}
+<h2>Product List</h2>
+<div class="row">
+    {% for prd in product %}
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ prd.f_name }} {{ prd.l_name }}</h5>
+                <p class="card-text">Phone Number: {{ prd.phone_num }}</p>
+                <p class="card-text">Product: {{ prd.product }}</p>
+                <p class="card-text">Bank: {{ prd.bank }}</p>
+                <p class="card-text">Status: {{ prd.status }}</p>
+                <a href="{% url 'details' prd.pk %}" class="btn btn-info btn-sm">Details</a>
+                <a href="{% url 'edit' prd.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'delete' prd.pk %}" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<a href="{% url 'create_customer' %}" class="btn btn-primary">Create New Customer</a>
+{% endblock %}

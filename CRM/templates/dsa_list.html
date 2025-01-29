@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block nav %}
+{% endblock %}
+
+{% block content %}
+
+<h2>DSA List</h2>
+<div class="row">
+    {% for ds in dsa %}
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">DSA Name:{{ ds.dsa_name }}</h5>
+                <p class="card-text">Phone Number: {{ ds.dsa_phone_number }}</p>
+                <p class="card-text">Product: {{ ds.dsa_code }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<a href="{% url 'create_customer' %}" class="btn btn-primary">Create New Customer</a>
+
+{% endblock %}
