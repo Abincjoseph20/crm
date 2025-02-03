@@ -17,9 +17,9 @@ class DSA(models.Model):
 
 BANK_CHOICE = (
     ('SBI','State Bank Of India'),
-    ('HD','HDFC'),
-    ('AX','AXIS'),
-    ('CNR','canara')
+    ('HDFC','HDFC'),
+    ('AXIX','AXIS'),
+    ('cANARA','canara')
 )
 
 PRODUCT_CHOICE = (
@@ -61,3 +61,12 @@ class Customer(models.Model):
     
     
 
+class Task(models.Model):
+    title = models.CharField(max_length=50)
+    descriptions = models.TextField(blank=True,null=True)
+    task_date = models.DateField()
+    task_time = models.TimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.title} - {self.task_date} {self.task_time}"

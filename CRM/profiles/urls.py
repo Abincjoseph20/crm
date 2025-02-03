@@ -15,6 +15,10 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     
     path('dsa_create',views.dsa,name='dsa_create'),
-    path('dsa_list',views.dsa_lis,name='dsa_list')
-
+    path('dsa_list',views.dsa_lis,name='dsa_list'),
+    
+    path('status_filter/<slug:status>',views.status_filter.as_view(),name='status_filter'),
+    
+    path('create_task/',views.Create_Task,name='create_task'),
+    path('list_task',views.task_list,name='list_task')
 ]

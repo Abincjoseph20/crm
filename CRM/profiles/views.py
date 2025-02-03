@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect,get_object_or_404,HttpResponse
-from .models import Customer,DSA, BANK_CHOICE, PRODUCT_CHOICE, STATUS_CHOICES, TYPE_CHOICES
+from .models import Customer,DSA,Task, BANK_CHOICE, PRODUCT_CHOICE, STATUS_CHOICES, TYPE_CHOICES
 from django.views import View
+from .forms import TaskForms
+
 
 def create_customer(request):
     if request.method == 'POST':
@@ -101,6 +103,12 @@ class Pdoduct_Catogory(View):
         product = Customer.objects.filter(product=val)
         titles = product.values('f_name','l_name')
         return render(request,'Product_catogory.html',{'product': product, 'titles': titles})
+    
+    
+class status_filter(View):
+    def get(self,request,status):
+        customers =Customer.objects.filter(status=status)
+        return render(request,'status_filter.html',{'customers':customers,'status':status})
 
     
 def search(request):
@@ -137,4 +145,30 @@ def dsa(request):
 def dsa_lis(request):
     dsa = DSA.objects.all()
     return render(request,'dsa_list.html',{'dsa':dsa})
-        
+
+
+
+
+def Create_Task(request):
+    form = TaskForms()
+    if request.method == 'POST':
+        form = TaskForms(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('task_list')
+        else:
+            form = TaskForms()
+    return render(request,'add_task.html',{'form':form})
+
+
+
+def task_list(request):
+    tasks = Task.objects.all().order_by('task_date', 'task_time')
+
+    task_dict = {}
+    for task in tasks:
+        if task.task_date not in task_dict:
+            task_dict[task.task_date] = []
+        task_dict[task.task_date].append(task)
+
+    return render(request, 'task_list.html', {'task_dict': task_dict})

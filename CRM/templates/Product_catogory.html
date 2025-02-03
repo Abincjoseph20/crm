@@ -1,8 +1,5 @@
 {% extends 'base.html' %}
 
-{% block nav %}
-{% endblock %}
-
 {% block content %}
 <h2>Product List</h2>
 <div class="row">
@@ -12,7 +9,7 @@
             <div class="card-body">
                 <h5 class="card-title">{{ prd.f_name }} {{ prd.l_name }}</h5>
                 <p class="card-text">Phone Number: {{ prd.phone_num }}</p>
-                <p class="card-text">Product: {{ prd.product }}</p>
+                <h5 class="card-text">Product: {{ prd.product }}</h5>
                 <p class="card-text">Bank: {{ prd.bank }}</p>
                 <p class="card-text">Status: {{ prd.status }}</p>
                 <a href="{% url 'details' prd.pk %}" class="btn btn-info btn-sm">Details</a>

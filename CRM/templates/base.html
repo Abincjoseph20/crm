@@ -123,12 +123,31 @@
                       <i class="fas fa-list">Bank</i>
                   </a>
                   <ul class="dropdown-menu">
-                      <li><a class="dropdown-item text-dark-custom" href="{% url 'category'  'HD' %}"><i></i>HDFC</a></li>
-                      <li><a class="dropdown-item text-dark-custom" href="{% url 'category'  'AX' %}"><i></i>AXIS</a></li>
-                      <li><a class="dropdown-item text-dark-custom" href="{% url 'category' 'CNR' %}"><i></i>CANARA</a></li>
+                      <li><a class="dropdown-item text-dark-custom" href="{% url 'category'  'HDFC' %}"><i></i>HDFC</a></li>
+                      <li><a class="dropdown-item text-dark-custom" href="{% url 'category'  'AXIS' %}"><i></i>AXIS</a></li>
+                      <li><a class="dropdown-item text-dark-custom" href="{% url 'category' 'CANARA' %}"><i></i>CANARA</a></li>
                       <li><a class="dropdown-item text-dark-custom" href="{% url 'category' 'SBI'  %}"><i></i>SBI</a></li>
                   </ul>
               </li>
+
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-primary-custom" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-list">Satus bar</i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item text-dark-custom" href="{% url 'status_filter'  'login_submit' %}"><i></i>login submited</a></li>
+                    <li><a class="dropdown-item text-dark-custom" href="{% url 'status_filter'  'login_complete' %}"><i></i>Login Complited</a></li>
+                    <li><a class="dropdown-item text-dark-custom" href="{% url 'status_filter' 'tec_completed' %}"><i></i>tec completed</a></li>
+                    <li><a class="dropdown-item text-dark-custom" href="{% url 'status_filter' 'legal_completed'  %}"><i></i>legal complete</a></li>
+                    <li><a class="dropdown-item text-dark-custom" href="{% url 'status_filter' 'disp' %}"><i></i>disbareced</a></li>
+                    <li><a class="dropdown-item text-dark-custom" href="{% url 'status_filter' 'reject'  %}"><i></i>rejected</a></li>
+                </ul>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'create_task' %}">Create Task<span class="sr-only"></span></a>
+          </li>
+
             </ul>
             <form class="d-flex" method="GET" action="{% url 'search' %}">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="keyword">

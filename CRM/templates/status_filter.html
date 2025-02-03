@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Customer List</h2>
+<h2>Product List</h2>
 <div class="row">
     {% for customer in customers %}
     <div class="col-md-4 mb-3">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">{{ customer.f_name }} {{ customer.l_name }}</h5>
+                <h5 class="card-title">{{ customer.f_name }} {{ prd.l_name }}</h5>
                 <p class="card-text">Phone Number: {{ customer.phone_num }}</p>
                 <p class="card-text">Product: {{ customer.product }}</p>
                 <p class="card-text">Bank: {{ customer.bank }}</p>
-                <p class="card-text">Status: {{ customer.status }}</p>
+                <h5 class="card-text">Status: {{ customer.status }}</h5>
                 <a href="{% url 'details' customer.pk %}" class="btn btn-info btn-sm">Details</a>
                 <a href="{% url 'edit' customer.pk %}" class="btn btn-warning btn-sm">Edit</a>
                 <a href="{% url 'delete' customer.pk %}" class="btn btn-danger btn-sm">Delete</a>

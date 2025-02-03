@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Task List (Grouped by Date)</h2>
+
+{% if task_dict %}
+    {% for date, tasks in task_dict.items %}
+        <h3 class="text-primary">{{ date|date:"F d, Y" }}</h3>
+        <ul class="list-group mb-3">
+            {% for task in tasks %}
+                <li class="list-group-item">
+                    <strong>{{ task.task_time|time:"h:i A" }}</strong> - {{ task.title }}
+                    <a href="{% url 'update_task' task.pk %}" class="btn btn-sm btn-info">Edit</a>
+                    <a href="{% url 'delete_task' task.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+{% else %}
+    <p>No tasks available.</p>
+{% endif %}
+
+<a href="{% url 'add_task' %}" class="btn btn-success">Add New Task</a>
+
+{% endblock %}
