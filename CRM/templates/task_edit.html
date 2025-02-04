@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Task</title>
+</head>
+<body>
+    <h1>Edit Task</h1>
+    <form action="{% url 'edit_task' task.id %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="title" value="{{ task.title }}" required><br>
+        <textarea name="descriptions">{{ task.description }}</textarea><br>
+        <input type="date" name="task_date" value="{{ task.task_date }}" required><br>
+        <input type="time" name="task_time" value="{{ task.task_time }}" required><br>
+        <button type="submit">Save Changes</button>
+    </form>
+    <a href="{% url 'task_list' %}">Back to Task List</a>
+</body>
+</html>

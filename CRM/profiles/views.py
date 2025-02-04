@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect,get_object_or_404,HttpResponse
 from .models import Customer,DSA,Task, BANK_CHOICE, PRODUCT_CHOICE, STATUS_CHOICES, TYPE_CHOICES
 from django.views import View
-from .forms import TaskForms
+from django.utils import timezone
+from django.http import Http404
 
 
 def create_customer(request):
@@ -124,7 +125,7 @@ def search(request):
     return render(request,'list.html',context)
 
 
-
+# Direct Selling Agent(DSA)
 def dsa(request):
     context = {}
     if request.method == 'POST':
@@ -150,17 +151,23 @@ def dsa_lis(request):
 
 
 def Create_Task(request):
-    form = TaskForms()
     if request.method == 'POST':
-        form = TaskForms(request.POST)
-        if form.is_valid():
-            form.save()
+        title = request.POST.get('title')
+        descriptions = request.POST.get('descriptions')
+        task_date = request.POST.get('task_date')
+        task_time = request.POST.get('task_time')
+        
+        if title and task_date and task_time:
+            Task.objects.create(
+                title=title,
+                descriptions=descriptions,
+                task_date=task_date,
+                task_time=task_time,
+            )
             return redirect('task_list')
-        else:
-            form = TaskForms()
-    return render(request,'add_task.html',{'form':form})
-
-
+    return render(request,'task_create.html')
+            
+        
 
 def task_list(request):
     tasks = Task.objects.all().order_by('task_date', 'task_time')
@@ -170,5 +177,35 @@ def task_list(request):
         if task.task_date not in task_dict:
             task_dict[task.task_date] = []
         task_dict[task.task_date].append(task)
+        
+    context = {
+        'task_dict': task_dict,
+        }
 
-    return render(request, 'task_list.html', {'task_dict': task_dict})
+    return render(request, 'task_list.html', context)
+
+
+def edit_task(request,task_id):
+    try:
+        task = Task.objects.get(id=task_id)
+        if request.method == 'POST':
+            task.title = request.POST.get('title')
+            task.descriptions = request.POST.get('descriptions')
+            task.task_date = request.POST.get('task_date')
+            task.task_time = request.POST.get('task_time')
+            task.save()
+            return redirect('task_list')
+    except Task.DoesNotExist:
+        raise Http404("Task not found")
+    except Exception as e:
+        # If any other unexpected error occurs, show it
+        return render(request, 'error_page.html', {'error': str(e)})
+    
+    return render(request,'task_edit.html',{'task':task})
+
+def delete_task(request,task_id):
+    task = Task.objects.get(id=task_id)
+    task.delete()
+    return redirect('task_list')
+
+

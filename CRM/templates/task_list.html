@@ -1,25 +1,22 @@
-{% extends 'base.html' %}
-{% block content %}
-
-<h2>Task List (Grouped by Date)</h2>
-
-{% if task_dict %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+</head>
+<body>
+    <h2>Task List</h2>
     {% for date, tasks in task_dict.items %}
-        <h3 class="text-primary">{{ date|date:"F d, Y" }}</h3>
-        <ul class="list-group mb-3">
+        <h3>{{ date }}</h3>
+        <ul>
             {% for task in tasks %}
-                <li class="list-group-item">
-                    <strong>{{ task.task_time|time:"h:i A" }}</strong> - {{ task.title }}
-                    <a href="{% url 'update_task' task.pk %}" class="btn btn-sm btn-info">Edit</a>
-                    <a href="{% url 'delete_task' task.pk %}" class="btn btn-sm btn-danger">Delete</a>
-                </li>
+                <li>{{ task.task_time }} - {{ task.title }}: {{ task.descriptions }}</li>
+                <a href='{% url 'edit_task' task.id %}'>Edit</a>
+                <a href='{% url 'delete_task' task.id %}'>Delete</a>
             {% endfor %}
         </ul>
     {% endfor %}
-{% else %}
-    <p>No tasks available.</p>
-{% endif %}
+</body>
+</html>
 
-<a href="{% url 'add_task' %}" class="btn btn-success">Add New Task</a>
-
-{% endblock %}

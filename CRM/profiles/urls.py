@@ -20,5 +20,7 @@ urlpatterns = [
     path('status_filter/<slug:status>',views.status_filter.as_view(),name='status_filter'),
     
     path('create_task/',views.Create_Task,name='create_task'),
-    path('list_task',views.task_list,name='list_task')
+    path('task_list',views.task_list,name='task_list'),
+    path('edit/<int:task_id>/', views.edit_task, name='edit_task'),
+    path('delete/<int:task_id>/', views.delete_task, name='delete_task'),
 ]
