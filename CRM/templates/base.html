@@ -94,16 +94,18 @@
         .top-navbar {
             background-color: white;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 15px 0;
+            padding: 0.75rem 0;
             position: sticky;
             top: 0;
             z-index: 100;
         }
         
-        /* Fixed Search Bar */
+        /* Perfectly Centered Search Bar */
         .search-container {
-            flex-grow: 1;
-            max-width: 800px;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 15px;
         }
         
         .search-form {
@@ -117,12 +119,21 @@
         .search-input {
             border-radius: 20px 0 0 20px !important;
             padding: 10px 20px;
+            border: 1px solid #ddd;
         }
         
         .search-button {
             border-radius: 0 20px 20px 0 !important;
             padding: 10px 20px;
             min-width: 100px;
+            border: 1px solid #ddd;
+            border-left: none;
+        }
+        
+        /* Right-Aligned Admin Button */
+        .user-dropdown-container {
+            margin-left: auto;
+            padding-right: 15px;
         }
         
         /* Dashboard Cards */
@@ -137,11 +148,6 @@
         
         .dashboard-card:hover {
             transform: translateY(-5px);
-        }
-        
-        .card-icon {
-            font-size: 2rem;
-            margin-bottom: 15px;
         }
         
         /* Responsive Adjustments */
@@ -163,6 +169,25 @@
             
             .search-button-text {
                 display: none;
+            }
+            
+            .user-dropdown-text {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .search-container {
+                padding: 0 10px;
+            }
+            
+            .search-input {
+                padding: 8px 15px;
+            }
+            
+            .search-button {
+                padding: 8px 15px;
+                min-width: auto;
             }
         }
     </style>
@@ -268,18 +293,19 @@
 
     <!-- Main Content -->
     <div class="main-content" id="mainContent">
-        <!-- Top Navigation Bar -->
+        <!-- Top Navigation Bar with Perfect Alignment -->
         <div class="top-navbar mb-4">
             <div class="container-fluid">
-                <div class="row align-items-center gx-3">
-                    <div class="col-auto d-lg-none">
+                <div class="row align-items-center gx-0">
+                    <!-- Sidebar Toggle -->
+                    <div class="col-auto d-lg-none ps-3">
                         <button class="btn btn-outline-secondary" id="sidebarToggle">
                             <i class="fas fa-bars"></i>
                         </button>
                     </div>
                     
-                    <!-- Fixed Search Bar -->
-                    <div class="col-lg-6 col-md-8">
+                    <!-- Perfectly Centered Search Bar -->
+                    <div class="col-lg-6 col-md-7 mx-lg-auto px-2">
                         <div class="search-container">
                             <form class="search-form" method="GET" action="{% url 'search' %}">
                                 <div class="input-group search-input-group">
@@ -297,11 +323,15 @@
                         </div>
                     </div>
                     
-                    <div class="col-lg-3 col-md-4 text-end">
+                    <!-- Right-Aligned Admin Button -->
+                    <div class="col-auto user-dropdown-container pe-3">
                         <div class="dropdown">
-                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle" 
+                                    type="button" 
+                                    id="userDropdown" 
+                                    data-bs-toggle="dropdown">
                                 <i class="fas fa-user-circle"></i>
-                                <span class="d-none d-md-inline"> Admin</span>
+                                <span class="user-dropdown-text"> Admin</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
