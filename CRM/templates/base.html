@@ -37,12 +37,11 @@
             padding: 20px 0;
             transition: all 0.3s;
             z-index: 1000;
-            overflow-y: auto; /* Add scrollbar when content exceeds height */
+            overflow-y: auto;
         }
         
-        /* Custom scrollbar for sidebar */
         .sidebar::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
         
         .sidebar::-webkit-scrollbar-track {
@@ -51,20 +50,12 @@
         
         .sidebar::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.3);
-            border-radius: 4px;
-        }
-        
-        .sidebar::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
+            border-radius: 3px;
         }
         
         .sidebar-header {
             padding: 0 20px 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: sticky;
-            top: 0;
-            background-color: var(--secondary-color);
-            z-index: 1;
         }
         
         .sidebar-menu {
@@ -77,9 +68,6 @@
             margin: 5px 0;
             border-radius: 0;
             transition: all 0.3s;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
         
         .nav-link:hover, .nav-link.active {
@@ -99,7 +87,7 @@
             width: calc(100% - var(--sidebar-width));
             padding: 20px;
             transition: all 0.3s;
-            overflow-x: auto; /* Add horizontal scroll if needed */
+            overflow-x: auto;
         }
         
         /* Top Navigation Bar */
@@ -112,24 +100,28 @@
             z-index: 100;
         }
         
-        /* Search Bar */
-        .search-bar {
-            width: 100%;
-            max-width: 800px; /* Wider search bar */
-            margin: 0 auto;
+        /* Fixed Search Bar */
+        .search-container {
+            flex-grow: 1;
+            max-width: 800px;
         }
         
-        .search-bar .form-control {
-            border-radius: 20px;
-            padding: 10px 20px;
-            border: 1px solid #ddd;
+        .search-form {
             width: 100%;
         }
         
-        .search-bar .btn {
-            border-radius: 20px;
+        .search-input-group {
+            width: 100%;
+        }
+        
+        .search-input {
+            border-radius: 20px 0 0 20px !important;
             padding: 10px 20px;
-            margin-left: 10px;
+        }
+        
+        .search-button {
+            border-radius: 0 20px 20px 0 !important;
+            padding: 10px 20px;
             min-width: 100px;
         }
         
@@ -169,27 +161,9 @@
                 width: calc(100% - 250px);
             }
             
-            .search-bar {
-                max-width: 100%;
+            .search-button-text {
+                display: none;
             }
-        }
-        
-        /* Custom scrollbar for main content */
-        .main-content::-webkit-scrollbar {
-            height: 8px;
-        }
-        
-        .main-content::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        
-        .main-content::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
-        }
-        
-        .main-content::-webkit-scrollbar-thumb:hover {
-            background: #555;
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -285,8 +259,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'dsa_list' %}"><i class="fas fa-users"></i> DSA Management</a>
                 </li>
-            
-
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'task_list' %}"><i class="fas fa-tasks"></i> Task Management</a>
                 </li>
@@ -299,26 +271,37 @@
         <!-- Top Navigation Bar -->
         <div class="top-navbar mb-4">
             <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-md-1">
-                        <button class="btn btn-outline-secondary d-lg-none" id="sidebarToggle">
+                <div class="row align-items-center gx-3">
+                    <div class="col-auto d-lg-none">
+                        <button class="btn btn-outline-secondary" id="sidebarToggle">
                             <i class="fas fa-bars"></i>
                         </button>
                     </div>
-                    <div class="col-md-8">
-                        <form class="search-bar" method="GET" action="{% url 'search' %}">
-                            <div class="input-group">
-                                <input type="search" class="form-control" placeholder="Search customers, loans, tasks..." name="keyword">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-search"></i> Search
-                                </button>
-                            </div>
-                        </form>
+                    
+                    <!-- Fixed Search Bar -->
+                    <div class="col-lg-6 col-md-8">
+                        <div class="search-container">
+                            <form class="search-form" method="GET" action="{% url 'search' %}">
+                                <div class="input-group search-input-group">
+                                    <input type="search" 
+                                           class="form-control search-input" 
+                                           placeholder="Search customers, loans, tasks..." 
+                                           name="keyword"
+                                           aria-label="Search">
+                                    <button class="btn btn-primary search-button" type="submit">
+                                        <i class="fas fa-search"></i>
+                                        <span class="search-button-text"> Search</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <div class="col-md-3 text-end">
+                    
+                    <div class="col-lg-3 col-md-4 text-end">
                         <div class="dropdown">
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle"></i> Admin
+                                <i class="fas fa-user-circle"></i>
+                                <span class="d-none d-md-inline"> Admin</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
@@ -374,12 +357,6 @@
                     }
                 }
             });
-            
-            // Auto-scroll sidebar to active item
-            const activeItem = document.querySelector('.nav-link.active');
-            if (activeItem) {
-                activeItem.scrollIntoView({ block: 'center' });
-            }
         });
     </script>
     {% block extra_js %}{% endblock %}

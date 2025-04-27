@@ -3,6 +3,7 @@ from .models import Customer,DSA,Task, BANK_CHOICE, PRODUCT_CHOICE, STATUS_CHOIC
 from django.views import View
 from django.utils import timezone
 from django.http import Http404
+from datetime import datetime,timedelta
 
 
 def create_customer(request):
@@ -171,15 +172,28 @@ def Create_Task(request):
 
 def task_list(request):
     tasks = Task.objects.all().order_by('task_date', 'task_time')
-
+    now = timezone.now()
+    
+    
+    
     task_dict = {}
+    notifications = []
+    
     for task in tasks:
+        task_datetime = datetime.combine(task.task_date,task.task_time)
+        if timezone.is_aware(now):
+            task_datetime = timezone.make_aware(task_datetime)
+            
+        if now <= task_datetime <= now + timedelta(minutes=2):
+            notifications.append(task)    
+        
         if task.task_date not in task_dict:
             task_dict[task.task_date] = []
         task_dict[task.task_date].append(task)
         
     context = {
         'task_dict': task_dict,
+        'notifications':notifications
         }
 
     return render(request, 'task_list.html', context)
