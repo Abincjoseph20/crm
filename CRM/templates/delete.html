@@ -1,14 +1,24 @@
 {% extends 'base.html' %}
 
+{% block title %}Delete Customer{% endblock %}
+
 {% block content %}
-<div class="container">
-    <h1>Delete Customer</h1>
-    <p>Are you sure you want to delete {{ customer.f_name }} {{ customer.l_name }}?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Yes, delete</button>
-        <a href="{% url 'details' customer.id %}">Cancel</a>
-    </form>
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h3><i class="fas fa-trash-alt"></i> Delete Customer</h3>
+            </div>
+            <div class="card-body">
+                <p>Are you sure you want to delete <strong>{{ customer.f_name }} {{ customer.l_name }}</strong>?</p>
+                <p>This action cannot be undone.</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger"><i class="fas fa-check"></i> Yes, Delete</button>
+                    <a href="{% url 'details' customer.id %}" class="btn btn-secondary"><i class="fas fa-times"></i> Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
-

@@ -1,111 +1,106 @@
 {% extends "base.html" %}
 
-{% block title %}{% endblock %}
+{% block title %}Create Customer{% endblock %}
 
 {% block content %}
-<h1>Create Customer</h1>
-<form method="post" action="{% url 'create_customer' %}">
-    {% csrf_token %}
-    <a href="{% url 'list' %}" class="btn btn-secondary mb-3">Back to List</a>
-
-    <div class="form-group">
-        <label for="f_name" class="form-label">First Name:</label>
-        <input type="text" id="f_name" name="f_name" class="form-control" required>
-    </div>
-    <div class="form-group">
-        <label for="l_name" class="form-label">Last Name:</label>
-        <input type="text" id="l_name" name="l_name" class="form-control" required>
-    </div>
-    <div class="form-group">
-        <label for="phone_num" class="form-label">Phone Number:</label>
-        <input type="text" id="phone_num" name="phone_num" class="form-control" required>
-    </div>
-    <div class="form-group">
-        <label for="product" class="form-label">Product:</label>
-        <select id="product" name="product" class="form-control" required>
-            <option value="" disabled selected>Select Product</option>
-            {% for code, name in product_choices %}
-                <option value="{{ code }}">{{ name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="bank" class="form-label">Bank:</label>
-        <select id="bank" name="bank" class="form-control" required>
-            <option value="" disabled selected>Select Bank</option>
-            {% for code, name in bank_choices %}
-                <option value="{{ code }}">{{ name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="status" class="form-label">Status:</label>
-        <select id="status" name="status" class="form-control" required>
-            <option value="" disabled selected>Select Status</option>
-            {% for code, name in status_choices %}
-                <option value="{{ code }}">{{ name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="form-group">
-        <label>Type:</label>
-        <div>
-            <input type="radio" id="type_dsa" name="type" value="DSA" checked> DSA
-            <input type="radio" id="type_self" name="type" value="SELF"> Self
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-user-plus"></i> Create New Customer</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'create_customer' %}">
+                    {% csrf_token %}
+                    <a href="{% url 'list' %}" class="btn btn-secondary mb-3"><i class="fas fa-arrow-left"></i> Back</a>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="f_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="f_name" name="f_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="l_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="l_name" name="l_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="phone_num" class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" id="phone_num" name="phone_num" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="product" class="form-label">Product</label>
+                            <select class="form-select" id="product" name="product" required>
+                                <option value="" disabled selected>Select Product</option>
+                                {% for code, name in product_choices %}
+                                    <option value="{{ code }}">{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="bank" class="form-label">Bank</label>
+                            <select class="form-select" id="bank" name="bank" required>
+                                <option value="" disabled selected>Select Bank</option>
+                                {% for code, name in bank_choices %}
+                                    <option value="{{ code }}">{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="" disabled selected>Select Status</option>
+                                {% for code, name in status_choices %}
+                                    <option value="{{ code }}">{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Type</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="type" id="type_dsa" value="DSA" checked>
+                                <label class="form-check-label" for="type_dsa">DSA</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="type" id="type_self" value="SELF">
+                                <label class="form-check-label" for="type_self">Self</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12 dsa-field">
+                            <label for="dsa" class="form-label">Select DSA</label>
+                            <select class="form-select" name="dsa" id="dsa">
+                                <option value="">--- Select DSA ---</option>
+                                {% for dsa in dsa_list %}
+                                    <option value="{{ dsa.id }}">{{ dsa.dsa_name }}, {{ dsa.dsa_phone_number }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-    <label for="dsa">Select DSA:</label>
-    <select name="dsa" id="dsa" class="form-control">
-        <option value="">--- Select DSA ---</option>
-        {% for dsa in dsa_list %}
-            <option value="{{ dsa.id }}">{{ dsa.dsa_name }},{{dsa.dsa_phone_number}}</option>
-        {% endfor %}
-    </select>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+</div>
 
+{% block extra_js %}
 <script>
-    // Function to enable DSA fields
-    function enableDSAFields(dsaFields) {
-        dsaFields.forEach(field => {
-            field.removeAttribute('disabled');
-            field.classList.remove('non-active');
-            field.classList.add('active');
-        });
-    }
-
-    // Function to disable DSA fields
-    function disableDSAFields(dsaFields) {
-        dsaFields.forEach(field => {
-            field.setAttribute('disabled', 'disabled');
-            field.classList.remove('active');
-            field.classList.add('non-active');
-        });
-    }
-
-    // Function to toggle active/non-active state of DSA fields
-    function toggleDSAFields() {
-        const type = document.querySelector('input[name="type"]:checked').value;
-        const dsaFields = document.querySelectorAll('.dsa-field');
-        const dsaSelect = document.getElementById('dsa');
-
-        if (type === 'DSA') {
-            enableDSAFields(dsaFields);
-            dsaSelect.style.display = 'block'; // Show DSA select
-        } else {
-            disableDSAFields(dsaFields);
-            dsaSelect.style.display = 'none'; // Hide DSA select
-        }
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
         const typeRadios = document.querySelectorAll('input[name="type"]');
+        const dsaField = document.querySelector('.dsa-field');
+        
+        function toggleDSAField() {
+            const selectedType = document.querySelector('input[name="type"]:checked').value;
+            dsaField.style.display = selectedType === 'DSA' ? 'block' : 'none';
+        }
+        
         typeRadios.forEach(radio => {
-            radio.addEventListener('change', toggleDSAFields);
+            radio.addEventListener('change', toggleDSAField);
         });
-
-        toggleDSAFields(); // Initial check
+        
+        toggleDSAField(); // Initial call
     });
 </script>
-
+{% endblock %}
 {% endblock %}

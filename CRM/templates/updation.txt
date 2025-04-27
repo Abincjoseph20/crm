@@ -1,0 +1,43 @@
+note done
+
+style and dashboerd not added 
+
+user autentication
+
+postgrass implimation
+
+Not installed search in dsa
+
+notification not added
+
+pagenation not added
+
+diffrenciate dsa and self case
+
+dsa edit and delete
+
+customer tranfer to dsa edit
+
+details page not added the dsa detais
+
+rest adding
+
+(.venv) PS E:\abin\ABIN\crm\CRM> python manage.py runserver
+
+done
+
+customer creation edit delete
+
+dsa creation
+
+meatting setup  
+
+product filtering
+
+customer search
+
+bank filter 
+
+status of loan
+
+dsa sortings

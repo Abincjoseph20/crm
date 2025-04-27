@@ -1,171 +1,387 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Loan Management System{% endblock %}</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-      body {
-        padding-top: 20px;
-        padding-bottom: 20px;
-      }
-
-      .container {
-        max-width: 900px;
-        margin: 0 auto;
-      }
-
-      .card {
-        margin-bottom: 20px;
-      }
-
-      .card-body {
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-
-      h1 {
-        color: #343a40;
-      }
-
-      a {
-        text-decoration: none;
-      }
-
-      .btn {
-        background-color: #007bff;
-        color: #fff;
-        padding: 10px 15px;
-        border-radius: 5px;
-        text-align: center;
-      }
-
-      .btn:hover {
-        background-color: #0056b3;
-      }
-
-      .non-active {
-        background-color: #f0f0f0;
-        color: #a0a0a0;
-      }
-
-      .active {
-        background-color: #ffffff;
-        color: #000000;
-      }
-
-      .form-label {
-        font-weight: bold;
-      }
-
-      .form-control {
-        margin-bottom: 15px;
-      }
-
-      .form-group {
-        margin-bottom: 20px;
-      }
-
-      .btn-danger {
-        background-color: #dc3545;
-        color: white;
-        padding: 8px 15px;
-        text-align: center;
-        border-radius: 5px;
-      }
-
-      .btn-danger:hover {
-        background-color: #c82333;
-      }
-    </style>
-    
-    {% block title %}<title></title>{% endblock %}
-  </head>
-  <body>
-    {% block nav %}
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">YourSite</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'list' %}">Home <span class="sr-only"></span></a>
-                </li>
-                <li class="nav-item active">
-                  <a class="nav-link" href="{% url 'dsa_create' %}">DSA <span class="sr-only"></span></a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="{% url 'dsa_list' %}">DSA List<span class="sr-only"></span></a>
-            </li>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --sidebar-width: 250px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--secondary-color);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            padding: 20px 0;
+            transition: all 0.3s;
+            z-index: 1000;
+            overflow-y: auto; /* Add scrollbar when content exceeds height */
+        }
+        
+        /* Custom scrollbar for sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            background-color: var(--secondary-color);
+            z-index: 1;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            margin: 5px 0;
+            border-radius: 0;
+            transition: all 0.3s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            padding: 20px;
+            transition: all 0.3s;
+            overflow-x: auto; /* Add horizontal scroll if needed */
+        }
+        
+        /* Top Navigation Bar */
+        .top-navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        /* Search Bar */
+        .search-bar {
+            width: 100%;
+            max-width: 800px; /* Wider search bar */
+            margin: 0 auto;
+        }
+        
+        .search-bar .form-control {
+            border-radius: 20px;
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            width: 100%;
+        }
+        
+        .search-bar .btn {
+            border-radius: 20px;
+            padding: 10px 20px;
+            margin-left: 10px;
+            min-width: 100px;
+        }
+        
+        /* Dashboard Cards */
+        .dashboard-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+            height: 100%;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                margin-left: -250px;
+            }
+            .sidebar.active {
+                margin-left: 0;
+            }
+            .main-content {
+                width: 100%;
+                margin-left: 0;
+            }
+            .main-content.active {
+                margin-left: 250px;
+                width: calc(100% - 250px);
+            }
             
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle text-primary-custom" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <i class="fas fa-list">Product</i>
-                  </a>
-                  <ul class="dropdown-menu">
-                      <li><a class="dropdown-item text-dark-custom" href="{% url 'product_catogory'  'HL' %}"><i></i>HL</a></li>
-                      <li><a class="dropdown-item text-dark-custom" href="{% url 'product_catogory'  'PL' %}"><i></i>PL</a></li>
-                      <li><a class="dropdown-item text-dark-custom" href="{% url 'product_catogory'  'CL' %}"><i></i>BL</a></li>
-                      <li><a class="dropdown-item text-dark-custom" href="{% url 'product_catogory'  'BL' %}"><i></i>CL</a></li>
-                      <li><a class="dropdown-item text-dark-custom" href="{% url 'product_catogory'  'RF' %}"><i></i>RF</a></li>
-                  </ul>
-              </li>
-
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle text-primary-custom" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <i class="fas fa-list">Bank</i>
-                  </a>
-                  <ul class="dropdown-menu">
-                      <li><a class="dropdown-item text-dark-custom" href="{% url 'category'  'HDFC' %}"><i></i>HDFC</a></li>
-                      <li><a class="dropdown-item text-dark-custom" href="{% url 'category'  'AXIS' %}"><i></i>AXIS</a></li>
-                      <li><a class="dropdown-item text-dark-custom" href="{% url 'category' 'CANARA' %}"><i></i>CANARA</a></li>
-                      <li><a class="dropdown-item text-dark-custom" href="{% url 'category' 'SBI'  %}"><i></i>SBI</a></li>
-                  </ul>
-              </li>
-
-
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-primary-custom" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-list">Satus bar</i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item text-dark-custom" href="{% url 'status_filter'  'login_submit' %}"><i></i>login submited</a></li>
-                    <li><a class="dropdown-item text-dark-custom" href="{% url 'status_filter'  'login_complete' %}"><i></i>Login Complited</a></li>
-                    <li><a class="dropdown-item text-dark-custom" href="{% url 'status_filter' 'tec_completed' %}"><i></i>tec completed</a></li>
-                    <li><a class="dropdown-item text-dark-custom" href="{% url 'status_filter' 'legal_completed'  %}"><i></i>legal complete</a></li>
-                    <li><a class="dropdown-item text-dark-custom" href="{% url 'status_filter' 'disp' %}"><i></i>disbareced</a></li>
-                    <li><a class="dropdown-item text-dark-custom" href="{% url 'status_filter' 'reject'  %}"><i></i>rejected</a></li>
-                </ul>
-            </li>
-
-            <li class="nav-item active">
-              <a class="nav-link" href="{% url 'create_task' %}">Create Task<span class="sr-only"></span></a>
-          </li>
-
-          <li class="nav-item active">
-            <a class="nav-link" href="{% url 'task_list' %}">List Task<span class="sr-only"></span></a>
-        </li>
-
-            </ul>
-            <form class="d-flex" method="GET" action="{% url 'search' %}">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+            .search-bar {
+                max-width: 100%;
+            }
+        }
+        
+        /* Custom scrollbar for main content */
+        .main-content::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .main-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        .main-content::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        
+        .main-content::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3 class="text-center">CRM</h3>
         </div>
-    </nav>
-    {% endblock %}
+        <div class="sidebar-menu">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'list' %}"><i class="fas fa-home"></i> Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#statusMenu">
+                        <i class="fas fa-tasks"></i> Status <i class="fas fa-chevron-down float-end"></i>
+                    </a>
+                    <div class="collapse" id="statusMenu">
+                        <ul class="nav flex-column ps-4">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'status_filter' 'login_submit' %}">Login Submitted</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'status_filter' 'login_complete' %}">Login Completed</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'status_filter' 'tec_completed' %}">Tec Completed</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'status_filter' 'legal_completed' %}">Legal Complete</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'status_filter' 'disp' %}">Disbursed</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'status_filter' 'reject' %}">Rejected</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
 
-    <div class="container">
-        {% block content %}{% endblock %}
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#productMenu">
+                        <i class="fas fa-box"></i> Products <i class="fas fa-chevron-down float-end"></i>
+                    </a>
+                    <div class="collapse" id="productMenu">
+                        <ul class="nav flex-column ps-4">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'product_catogory' 'HL' %}">HL</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'product_catogory' 'PL' %}">PL</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'product_catogory' 'CL' %}">BL</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'product_catogory' 'BL' %}">CL</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'product_catogory' 'RF' %}">RF</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#bankMenu">
+                        <i class="fas fa-university"></i> Banks <i class="fas fa-chevron-down float-end"></i>
+                    </a>
+                    <div class="collapse" id="bankMenu">
+                        <ul class="nav flex-column ps-4">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'category' 'HDFC' %}">HDFC</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'category' 'AXIS' %}">AXIS</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'category' 'CANARA' %}">CANARA</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'category' 'SBI' %}">SBI</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'create_customer' %}"><i class="fas fa-user-plus"></i> Create Customer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'dsa_list' %}"><i class="fas fa-users"></i> DSA Management</a>
+                </li>
+            
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'task_list' %}"><i class="fas fa-tasks"></i> Task Management</a>
+                </li>
+            </ul>
+        </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-  </body>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Top Navigation Bar -->
+        <div class="top-navbar mb-4">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-1">
+                        <button class="btn btn-outline-secondary d-lg-none" id="sidebarToggle">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                    <div class="col-md-8">
+                        <form class="search-bar" method="GET" action="{% url 'search' %}">
+                            <div class="input-group">
+                                <input type="search" class="form-control" placeholder="Search customers, loans, tasks..." name="keyword">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle"></i> Admin
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="container-fluid">
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar on mobile
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('mainContent').classList.toggle('active');
+        });
+        
+        // Activate current menu item
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUrl = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentUrl) {
+                    link.classList.add('active');
+                    
+                    // Expand parent collapse if exists
+                    const parentCollapse = link.closest('.collapse');
+                    if (parentCollapse) {
+                        parentCollapse.classList.add('show');
+                    }
+                }
+            });
+            
+            // Auto-scroll sidebar to active item
+            const activeItem = document.querySelector('.nav-link.active');
+            if (activeItem) {
+                activeItem.scrollIntoView({ block: 'center' });
+            }
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
 </html>

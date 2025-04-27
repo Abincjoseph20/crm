@@ -1,121 +1,115 @@
 {% extends "base.html" %}
 
-{% block title %}Edit Customer{% endblock %}
+{% block title %}Edit Customer - {{ customer.f_name }} {{ customer.l_name }}{% endblock %}
 
 {% block content %}
-<h1>Edit Customer</h1>
-<form method="post" action="{% url 'edit' customer.pk %}">
-    {% csrf_token %}
-    <a href="{% url 'list' %}" class="btn btn-secondary mb-3">Back to List</a>
-
-    <div class="form-group">
-        <label for="f_name" class="form-label">First Name:</label>
-        <input type="text" id="f_name" name="f_name" class="form-control" value="{{ customer.f_name }}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="l_name" class="form-label">Last Name:</label>
-        <input type="text" id="l_name" name="l_name" class="form-control" value="{{ customer.l_name }}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="phone_num" class="form-label">Phone Number:</label>
-        <input type="text" id="phone_num" name="phone_num" class="form-control" value="{{ customer.phone_num }}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="product" class="form-label">Product:</label>
-        <select id="product" name="product" class="form-control" required>
-            {% for code, name in product_choices %}
-                <option value="{{ code }}" {% if customer.product == code %}selected{% endif %}>{{ name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="bank" class="form-label">Bank:</label>
-        <select id="bank" name="bank" class="form-control" required>
-            {% for code, name in bank_choices %}
-                <option value="{{ code }}" {% if customer.bank == code %}selected{% endif %}>{{ name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="status" class="form-label">Status:</label>
-        <select id="status" name="status" class="form-control" required>
-            {% for code, name in status_choices %}
-                <option value="{{ code }}" {% if customer.status == code %}selected{% endif %}>{{ name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>Type:</label>
-        {% for code, name in type_choices %}
-            <div class="form-check form-check-inline">
-                <input type="radio" id="type_{{ code }}" name="type" class="form-check-input" value="{{ code }}" {% if customer.type == code %}checked{% endif %}>
-                <label class="form-check-label" for="type_{{ code }}">{{ name }}</label>
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-user-edit"></i> Edit Customer</h3>
             </div>
-        {% endfor %}
+            <div class="card-body">
+                <form method="post" action="{% url 'edit' customer.pk %}">
+                    {% csrf_token %}
+                    <a href="{% url 'list' %}" class="btn btn-secondary mb-3"><i class="fas fa-arrow-left"></i> Back to List</a>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="f_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="f_name" name="f_name" value="{{ customer.f_name }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="l_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="l_name" name="l_name" value="{{ customer.l_name }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="phone_num" class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" id="phone_num" name="phone_num" value="{{ customer.phone_num }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="product" class="form-label">Product</label>
+                            <select class="form-select" id="product" name="product" required>
+                                {% for code, name in product_choices %}
+                                    <option value="{{ code }}" {% if customer.product == code %}selected{% endif %}>{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="bank" class="form-label">Bank</label>
+                            <select class="form-select" id="bank" name="bank" required>
+                                {% for code, name in bank_choices %}
+                                    <option value="{{ code }}" {% if customer.bank == code %}selected{% endif %}>{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" name="status" required>
+                                {% for code, name in status_choices %}
+                                    <option value="{{ code }}" {% if customer.status == code %}selected{% endif %}>{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Type</label>
+                            <div class="form-check">
+                                {% for code, name in type_choices %}
+                                <input class="form-check-input" type="radio" name="type" id="type_{{ code }}" value="{{ code }}" 
+                                    {% if customer.type == code %}checked{% endif %}>
+                                <label class="form-check-label" for="type_{{ code }}">{{ name }}</label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-4 dsa-field">
+                            <label for="dsa_name" class="form-label">DSA Name</label>
+                            <input type="text" class="form-control" id="dsa_name" name="dsa_name" value="{{ customer.dsa_name }}">
+                        </div>
+                        <div class="col-md-4 dsa-field">
+                            <label for="dsa_number" class="form-label">DSA Number</label>
+                            <input type="text" class="form-control" id="dsa_number" name="dsa_number" value="{{ customer.dsa_number }}">
+                        </div>
+                        <div class="col-md-4 dsa-field">
+                            <label for="dsa_connector_code" class="form-label">DSA Connector Code</label>
+                            <input type="text" class="form-control" id="dsa_connector_code" name="dsa_connector_code" value="{{ customer.dsa_connector_code }}">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="form-group">
-        <label for="dsa_name" class="form-label">DSA Name:</label>
-        <input type="text" id="dsa_name" name="dsa_name" class="form-control dsa-field" value="{{ customer.dsa_name }}" {% if customer.type != 'DSA' %}disabled{% endif %}>
-    </div>
-
-    <div class="form-group">
-        <label for="dsa_number" class="form-label">DSA Number:</label>
-        <input type="text" id="dsa_number" name="dsa_number" class="form-control dsa-field" value="{{ customer.dsa_number }}" {% if customer.type != 'DSA' %}disabled{% endif %}>
-    </div>
-
-    <div class="form-group">
-        <label for="dsa_connector_code" class="form-label">DSA Connector Code:</label>
-        <input type="text" id="dsa_connector_code" name="dsa_connector_code" class="form-control dsa-field" value="{{ customer.dsa_connector_code }}" {% if customer.type != 'DSA' %}disabled{% endif %}>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-
+{% block extra_js %}
 <script>
-    // Function to enable DSA fields
-    function enableDSAFields(dsaFields) {
-        dsaFields.forEach(field => {
-            field.removeAttribute('disabled');
-            field.classList.remove('non-active');
-            field.classList.add('active');
-        });
-    }
-
-    // Function to disable DSA fields
-    function disableDSAFields(dsaFields) {
-        dsaFields.forEach(field => {
-            field.setAttribute('disabled', 'disabled');
-            field.classList.remove('active');
-            field.classList.add('non-active');
-        });
-    }
-
-    // Function to toggle active/non-active state of DSA fields
-    function toggleDSAFields() {
-        const type = document.querySelector('input[name="type"]:checked').value;
-        const dsaFields = document.querySelectorAll('.dsa-field');
-
-        if (type === 'DSA') {
-            enableDSAFields(dsaFields);
-        } else {
-            disableDSAFields(dsaFields);
-        }
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
         const typeRadios = document.querySelectorAll('input[name="type"]');
+        const dsaFields = document.querySelectorAll('.dsa-field');
+        
+        function toggleDSAFields() {
+            const selectedType = document.querySelector('input[name="type"]:checked').value;
+            dsaFields.forEach(field => {
+                field.style.display = selectedType === 'DSA' ? 'block' : 'none';
+                const inputs = field.querySelectorAll('input');
+                inputs.forEach(input => {
+                    if (selectedType !== 'DSA') {
+                        input.setAttribute('disabled', 'disabled');
+                    } else {
+                        input.removeAttribute('disabled');
+                    }
+                });
+            });
+        }
+        
         typeRadios.forEach(radio => {
             radio.addEventListener('change', toggleDSAFields);
         });
-
-        toggleDSAFields();
+        
+        toggleDSAFields(); // Initial call
     });
 </script>
+{% endblock %}
 {% endblock %}

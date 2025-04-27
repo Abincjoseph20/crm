@@ -1,29 +1,38 @@
 {% extends "base.html" %}
 
-{% block title %}{% endblock %}
+{% block title %}Create DSA{% endblock %}
 
 {% block content %}
-
-
-<form method="post" action="{% url 'dsa_create' %}">
-    {% csrf_token %}
-    <a href="{% url 'dsa_list' %}" class="btn btn-secondary mb-3">Back to List</a>
-
-    <div class="form-group">
-        <label for="dsa_name" class="form-label">DSA Name:</label>
-        <input type="text" id="dsa_name" name="dsa_name" class="form-control" required>
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-user-plus"></i> Create New DSA</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'dsa_create' %}">
+                    {% csrf_token %}
+                    <a href="{% url 'dsa_list' %}" class="btn btn-secondary mb-3"><i class="fas fa-arrow-left"></i> Back to List</a>
+                    
+                    <div class="mb-3">
+                        <label for="dsa_name" class="form-label">DSA Name</label>
+                        <input type="text" class="form-control" id="dsa_name" name="dsa_name" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="dsa_code" class="form-label">DSA Code</label>
+                        <input type="text" class="form-control" id="dsa_code" name="dsa_code" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="dsa_phone_number" class="form-label">DSA Phone Number</label>
+                        <input type="text" class="form-control" id="dsa_phone_number" name="dsa_phone_number" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Submit</button>
+                </form>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label for="dsa_code" class="form-label">DSA Code:</label>
-        <input type="text" id="dsa_code" name="dsa_code" class="form-control" required>
-    </div>
-
-    <div class="form-group">
-        <label for="dsa_phone_number" class="form-label">DSA Phone:</label>
-        <input type="text" id="dsa_phone_number" name="dsa_phone_number" class="form-control" required>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+</div>
 {% endblock %}
