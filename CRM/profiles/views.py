@@ -4,7 +4,17 @@ from django.views import View
 from django.utils import timezone
 from django.http import Http404
 from datetime import datetime,timedelta
+from datetime import timedelta
 
+
+
+from django.utils import timezone
+from datetime import datetime, timedelta
+from django.http import Http404
+from .models import Task
+
+def Home(request):
+    return render(request,'home1.html')
 
 def create_customer(request):
     if request.method == 'POST':
@@ -153,53 +163,52 @@ def dsa_lis(request):
 
 def Create_Task(request):
     if request.method == 'POST':
-        title = request.POST.get('title')
-        descriptions = request.POST.get('descriptions')
-        task_date = request.POST.get('task_date')
-        task_time = request.POST.get('task_time')
-        
-        if title and task_date and task_time:
+        try:
+            # Get raw input
+            title = request.POST.get('title')
+            task_date_str = request.POST.get('task_date')
+            task_time_str = request.POST.get('task_time')
+            
+            # Parse and localize
+            naive_datetime = datetime.strptime(
+                f"{task_date_str} {task_time_str}", 
+                '%Y-%m-%d %H:%M'
+            )
+            localized_datetime = timezone.make_aware(
+                naive_datetime,
+                timezone.get_current_timezone()
+            )
+            
             Task.objects.create(
                 title=title,
-                descriptions=descriptions,
-                task_date=task_date,
-                task_time=task_time,
+                descriptions=request.POST.get('descriptions'),
+                task_date=localized_datetime.date(),
+                task_time=localized_datetime.time(),
             )
             return redirect('task_list')
-    return render(request,'task_create.html')
-            
+        except Exception as e:
+            return render(request, 'error_page.html', {'error': str(e)})
+    return render(request, 'task_create.html')
         
 
 def task_list(request):
     tasks = Task.objects.all().order_by('task_date', 'task_time')
-    now = timezone.now()
-    
-    
     
     task_dict = {}
-    notifications = []
     
-    for task in tasks:
-        task_datetime = datetime.combine(task.task_date,task.task_time)
-        if timezone.is_aware(now):
-            task_datetime = timezone.make_aware(task_datetime)
-            
-        if now <= task_datetime <= now + timedelta(minutes=2):
-            notifications.append(task)    
-        
+    for task in tasks:    
         if task.task_date not in task_dict:
             task_dict[task.task_date] = []
         task_dict[task.task_date].append(task)
         
     context = {
         'task_dict': task_dict,
-        'notifications':notifications
-        }
+    }
 
     return render(request, 'task_list.html', context)
 
 
-def edit_task(request,task_id):
+def edit_task(request, task_id):
     try:
         task = Task.objects.get(id=task_id)
         if request.method == 'POST':
@@ -209,17 +218,38 @@ def edit_task(request,task_id):
             task.task_time = request.POST.get('task_time')
             task.save()
             return redirect('task_list')
+        return render(request, 'task_edit.html', {'task': task})
     except Task.DoesNotExist:
         raise Http404("Task not found")
     except Exception as e:
-        # If any other unexpected error occurs, show it
         return render(request, 'error_page.html', {'error': str(e)})
-    
-    return render(request,'task_edit.html',{'task':task})
 
-def delete_task(request,task_id):
-    task = Task.objects.get(id=task_id)
-    task.delete()
+
+def delete_task(request, task_id):
+    try:
+        task = Task.objects.get(id=task_id)
+        task.delete()
+    except Task.DoesNotExist:
+        raise Http404("Task not found")
     return redirect('task_list')
 
 
+def upcoming_notifications(request):
+    now = timezone.localtime(timezone.now())
+    window_end = now + timedelta(minutes=5)
+    
+    # Debug prints
+    print(f"\nCurrent local time: {now}")
+    print(f"Notification window: {now.time()} to {window_end.time()}")
+    
+    upcoming_tasks = Task.objects.filter(
+        task_date=now.date(),
+        task_time__range=(now.time(), window_end.time())
+    ).order_by('task_time')
+    
+    print(f"Found tasks: {list(upcoming_tasks)}")
+    
+    return render(request, 'upcoming_notifications.html', {
+        'upcoming_notifications': upcoming_tasks,
+        'current_time': now,
+    })

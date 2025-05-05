@@ -3,36 +3,73 @@
 {% block title %}Create DSA{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-6 mx-auto">
+<div class="row animate-fade">
+    <div class="col-lg-6 mx-auto">
         <div class="card">
-            <div class="card-header">
-                <h3><i class="fas fa-user-plus"></i> Create New DSA</h3>
+            <div class="card-header bg-white">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-user-plus me-2 text-primary"></i>
+                    <h4 class="mb-0">Register New DSA</h4>
+                </div>
             </div>
             <div class="card-body">
-                <form method="post" action="{% url 'dsa_create' %}">
+                <form method="post" action="{% url 'dsa_create' %}" class="needs-validation" novalidate>
                     {% csrf_token %}
-                    <a href="{% url 'dsa_list' %}" class="btn btn-secondary mb-3"><i class="fas fa-arrow-left"></i> Back to List</a>
+                    <div class="d-flex justify-content-between mb-4">
+                        <a href="{% url 'dsa_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to List
+                        </a>
+                    </div>
                     
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label for="dsa_name" class="form-label">DSA Name</label>
                         <input type="text" class="form-control" id="dsa_name" name="dsa_name" required>
+                        <div class="invalid-feedback">Please provide the DSA name</div>
                     </div>
                     
-                    <div class="mb-3">
-                        <label for="dsa_code" class="form-label">DSA Code</label>
-                        <input type="text" class="form-control" id="dsa_code" name="dsa_code" required>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="dsa_code" class="form-label">DSA Code</label>
+                                <input type="text" class="form-control" id="dsa_code" name="dsa_code" required>
+                                <div class="invalid-feedback">Please provide a DSA code</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="dsa_phone_number" class="form-label">Phone Number</label>
+                                <input type="text" class="form-control" id="dsa_phone_number" name="dsa_phone_number" required>
+                                <div class="invalid-feedback">Please provide a valid phone number</div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="mb-3">
-                        <label for="dsa_phone_number" class="form-label">DSA Phone Number</label>
-                        <input type="text" class="form-control" id="dsa_phone_number" name="dsa_phone_number" required>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Register DSA
+                        </button>
                     </div>
-                    
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Submit</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+{% block extra_js %}
+<script>
+    // Form validation
+    document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    });
+</script>
+{% endblock %}
 {% endblock %}

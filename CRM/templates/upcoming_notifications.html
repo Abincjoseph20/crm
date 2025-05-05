@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Upcoming Notifications{% endblock %}
+
+{% block content %}
+<div class="row animate-fade">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-header bg-white">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-bell me-2 text-primary"></i>
+                    <h4 class="mb-0">Upcoming Notifications</h4>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="mb-4">
+                    <div class="alert alert-light">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-clock me-3 text-primary fa-lg"></i>
+                            <div>
+                                <h5 class="mb-1">Current Time</h5>
+                                <p class="mb-0">{{ current_time|date:"Y-m-d H:i:s" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if upcoming_notifications %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Task</th>
+                                <th>Scheduled Time</th>
+                                <th>Time Left</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in upcoming_notifications %}
+                            <tr>
+                                <td>
+                                    <strong>{{ task.title }}</strong>
+                                    {% if task.descriptions %}
+                                        <div class="text-muted small">{{ task.descriptions }}</div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ task.task_date }} at {{ task.task_time|time:"H:i" }}
+                                </td>
+                                <td>
+                                    <span class="badge bg-{% if task.urgency == 'high' %}danger{% elif task.urgency == 'medium' %}warning{% else %}info{% endif %}">
+                                        {{ task.time_left }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a href="{% url 'edit_task' task.id %}" class="btn btn-sm btn-outline-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <h5>No Upcoming Tasks</h5>
+                    <p class="text-muted">You have no tasks due in the next 5 minutes</p>
+                    {% if debug %}
+                    <div class="alert alert-light mt-3">
+                        <small>
+                            Debug: Current window is {{ current_time|time }} to {{ window_end|time }}
+                        </small>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

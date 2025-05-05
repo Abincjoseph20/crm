@@ -3,55 +3,98 @@
 {% block title %}Task List{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-8 mx-auto">
-
+<div class="row animate-fade">
+    <div class="col-lg-8 mx-auto">
         <!-- Notification Section -->
         {% if notifications %}
-        <div class="alert alert-info">
-            <div class="d-flex justify-content-between align-items-center">
+        <div class="alert alert-info alert-dismissible fade show">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-bell me-3 fa-lg"></i>
                 <div>
-                    <h5><i class="fas fa-bell"></i> Upcoming Tasks ({{ notifications|length }})</h5> 
-                    <ul class="mb-0">
+                    <h5 class="mb-1">Upcoming Tasks ({{ notifications|length }})</h5>
+                    <ul class="mb-0 ps-3">
                         {% for task in notifications %}
-                        <li><strong>{{ task.title }}</strong> at {{ task.task_time }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-        <!-- End Notification Section -->
-
-        <div class="card">
-            <div class="card-header">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h3><i class="fas fa-tasks"></i> Task List</h3>
-                    <a href="{% url 'create_task' %}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Task</a>
-                </div>
-            </div>
-            <div class="card-body">
-                {% for date, tasks in task_dict.items %}
-                <div class="mb-4">
-                    <h5 class="bg-primary text-white p-2 rounded">{{ date }}</h5>
-                    <ul class="list-group">
-                        {% for task in tasks %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>{{ task.task_time }} - {{ task.title }}</strong>
-                                {% if task.descriptions %}
-                                    <p class="mb-0">{{ task.descriptions }}</p>
-                                {% endif %}
-                            </div>
-                            <div>
-                                <a href="{% url 'edit_task' task.id %}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
-                                <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
-                            </div>
+                        <li>
+                            <strong>{{ task.title }}</strong> - 
+                            {{ task.task_date }} at {{ task.task_time|time:"H:i" }}
                         </li>
                         {% endfor %}
                     </ul>
                 </div>
-                {% endfor %}
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        
+        <div class="card">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-tasks me-2 text-primary"></i>
+                        <h4 class="mb-0">Task Management</h4>
+                    </div>
+                    <a href="{% url 'create_task' %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus me-2"></i>New Task
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                {% if task_dict %}
+                <div class="accordion" id="taskAccordion">
+                    {% for date, tasks in task_dict.items %}
+                    <div class="accordion-item border-0 mb-3">
+                        <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                            <button class="accordion-button bg-light rounded" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="true" 
+                                    aria-controls="collapse{{ forloop.counter }}">
+                                <i class="fas fa-calendar-day me-2 text-primary"></i>
+                                {{ date }}
+                                <span class="badge bg-primary ms-2">{{ tasks|length }}</span>
+                            </button>
+                        </h2>
+                        <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse show" 
+                             aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#taskAccordion">
+                            <div class="accordion-body p-0">
+                                <ul class="list-group list-group-flush">
+                                    {% for task in tasks %}
+                                    <li class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <div class="d-flex align-items-center mb-1">
+                                                    <span class="badge bg-primary me-2">
+                                                        {{ task.task_time|time:"H:i" }}
+                                                    </span>
+                                                    <h6 class="mb-0">{{ task.title }}</h6>
+                                                </div>
+                                                {% if task.descriptions %}
+                                                    <p class="text-muted small mb-0">{{ task.descriptions }}</p>
+                                                {% endif %}
+                                            </div>
+                                            <div class="d-flex gap-2">
+                                                <a href="{% url 'edit_task' task.id %}" class="btn btn-sm btn-outline-warning">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-tasks fa-3x text-muted mb-3"></i>
+                    <h5>No Tasks Scheduled</h5>
+                    <p class="text-muted">Click the button above to schedule your first task</p>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>

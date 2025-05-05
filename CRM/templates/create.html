@@ -3,79 +3,131 @@
 {% block title %}Create Customer{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-8 mx-auto">
+<div class="row animate-fade">
+    <div class="col-lg-8 mx-auto">
         <div class="card">
-            <div class="card-header">
-                <h3><i class="fas fa-user-plus"></i> Create New Customer</h3>
+            <div class="card-header bg-white">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-user-plus me-2 text-primary"></i>
+                    <h4 class="mb-0">Create New Customer</h4>
+                </div>
             </div>
             <div class="card-body">
-                <form method="post" action="{% url 'create_customer' %}">
+                <form method="post" action="{% url 'create_customer' %}" class="needs-validation" novalidate>
                     {% csrf_token %}
-                    <a href="{% url 'list' %}" class="btn btn-secondary mb-3"><i class="fas fa-arrow-left"></i> Back</a>
+                    <div class="d-flex justify-content-between mb-4">
+                        <a href="{% url 'list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                        </a>
+                    </div>
                     
-                    <div class="row g-3">
+                    <div class="row g-4">
+                        <!-- Personal Info -->
                         <div class="col-md-6">
-                            <label for="f_name" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="f_name" name="f_name" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="l_name" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="l_name" name="l_name" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="phone_num" class="form-label">Phone Number</label>
-                            <input type="text" class="form-control" id="phone_num" name="phone_num" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="product" class="form-label">Product</label>
-                            <select class="form-select" id="product" name="product" required>
-                                <option value="" disabled selected>Select Product</option>
-                                {% for code, name in product_choices %}
-                                    <option value="{{ code }}">{{ name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="bank" class="form-label">Bank</label>
-                            <select class="form-select" id="bank" name="bank" required>
-                                <option value="" disabled selected>Select Bank</option>
-                                {% for code, name in bank_choices %}
-                                    <option value="{{ code }}">{{ name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="status" class="form-label">Status</label>
-                            <select class="form-select" id="status" name="status" required>
-                                <option value="" disabled selected>Select Status</option>
-                                {% for code, name in status_choices %}
-                                    <option value="{{ code }}">{{ name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-12">
-                            <label class="form-label">Type</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="type" id="type_dsa" value="DSA" checked>
-                                <label class="form-check-label" for="type_dsa">DSA</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="type" id="type_self" value="SELF">
-                                <label class="form-check-label" for="type_self">Self</label>
+                            <div class="form-group">
+                                <label for="f_name" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="f_name" name="f_name" required>
+                                <div class="invalid-feedback">Please provide a first name</div>
                             </div>
                         </div>
-                        <div class="col-md-12 dsa-field">
-                            <label for="dsa" class="form-label">Select DSA</label>
-                            <select class="form-select" name="dsa" id="dsa">
-                                <option value="">--- Select DSA ---</option>
-                                {% for dsa in dsa_list %}
-                                    <option value="{{ dsa.id }}">{{ dsa.dsa_name }}, {{ dsa.dsa_phone_number }}</option>
-                                {% endfor %}
-                            </select>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="l_name" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="l_name" name="l_name" required>
+                                <div class="invalid-feedback">Please provide a last name</div>
+                            </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="phone_num" class="form-label">Phone Number</label>
+                                <input type="text" class="form-control" id="phone_num" name="phone_num" required>
+                                <div class="invalid-feedback">Please provide a valid phone number</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Loan Info -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="product" class="form-label">Product</label>
+                                <select class="form-select" id="product" name="product" required>
+                                    <option value="" disabled selected>Select Product</option>
+                                    {% for code, name in product_choices %}
+                                        <option value="{{ code }}">{{ name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="bank" class="form-label">Bank</label>
+                                <select class="form-select" id="bank" name="bank" required>
+                                    <option value="" disabled selected>Select Bank</option>
+                                    {% for code, name in bank_choices %}
+                                        <option value="{{ code }}">{{ name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="" disabled selected>Select Status</option>
+                                    {% for code, name in status_choices %}
+                                        <option value="{{ code }}">{{ name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Type Selection -->
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Submit</button>
+                            <label class="form-label">Customer Type</label>
+                            <div class="d-flex gap-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="type" id="type_dsa" value="DSA" checked>
+                                    <label class="form-check-label" for="type_dsa">
+                                        <i class="fas fa-user-tie me-1"></i> DSA
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="type" id="type_self" value="SELF">
+                                    <label class="form-check-label" for="type_self">
+                                        <i class="fas fa-user me-1"></i> Self
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- DSA Fields -->
+                        <div class="col-12 dsa-field">
+                            <div class="card mt-2">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">
+                                        <i class="fas fa-user-tie text-primary me-2"></i>DSA Information
+                                    </h5>
+                                    <div class="row g-3">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="dsa" class="form-label">Select DSA</label>
+                                                <select class="form-select" name="dsa" id="dsa">
+                                                    <option value="">--- Select DSA ---</option>
+                                                    {% for dsa in dsa_list %}
+                                                        <option value="{{ dsa.id }}">{{ dsa.dsa_name }}, {{ dsa.dsa_phone_number }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-save me-2"></i>Create Customer
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -100,6 +152,18 @@
         });
         
         toggleDSAField(); // Initial call
+        
+        // Form validation
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
     });
 </script>
 {% endblock %}

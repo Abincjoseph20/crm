@@ -3,29 +3,74 @@
 {% block title %}DSA List{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2><i class="fas fa-users"></i> DSA List</h2>
-            <a href="{% url 'dsa_create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> New DSA</a>
-        </div>
-        
-        <div class="row">
-            {% for ds in dsa %}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title"><i class="fas fa-user-tie"></i> {{ ds.dsa_name }}</h5>
-                        <p class="card-text"><i class="fas fa-phone"></i> {{ ds.dsa_phone_number }}</p>
-                        <p class="card-text"><i class="fas fa-id-card"></i> {{ ds.dsa_code }}</p>
+<div class="row animate-fade">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-user-tie me-3 text-primary" style="font-size: 1.5rem;"></i>
+                        <div>
+                            <h4 class="mb-0">DSA Management</h4>
+                            <p class="text-muted mb-0">Total: {{ dsa.count }} DSAs registered</p>
+                        </div>
                     </div>
-                    <div class="card-footer bg-transparent">
-                        <a href="#" class="btn btn-sm btn-info"><i class="fas fa-eye"></i> View</a>
-                        <a href="#" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> Edit</a>
-                    </div>
+                    <a href="{% url 'dsa_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Register New DSA
+                    </a>
                 </div>
             </div>
-            {% endfor %}
+            
+            <div class="card-body">
+                {% if dsa %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>DSA Name</th>
+                                <th>Phone Number</th>
+                                <th>DSA Code</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ds in dsa %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px;">
+                                            {{ ds.dsa_name|first|upper }}
+                                        </div>
+                                        <strong>{{ ds.dsa_name }}</strong>
+                                    </div>
+                                </td>
+                                <td>{{ ds.dsa_phone_number }}</td>
+                                <td>
+                                    <span class="badge bg-primary">{{ ds.dsa_code }}</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a href="#" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="#" class="btn btn-sm btn-outline-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-user-tie fa-3x text-muted mb-3"></i>
+                    <h5>No DSAs Registered</h5>
+                    <p class="text-muted">Click the button above to register your first DSA</p>
+                </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>

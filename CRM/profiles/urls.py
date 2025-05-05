@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.create_customer, name='create_customer'),
+    path('',views.Home,name='home'),
+    path('create_customer/', views.create_customer, name='create_customer'),
     path('customers/', views.customer_list, name='list'),
     path('customers/details/<int:pk>',views.details,name='details'),
 
@@ -23,4 +24,6 @@ urlpatterns = [
     path('task_list',views.task_list,name='task_list'),
     path('edit/<int:task_id>/', views.edit_task, name='edit_task'),
     path('delete/<int:task_id>/', views.delete_task, name='delete_task'),
+    path('upcoming-notifications/', views.upcoming_notifications, name='upcoming_notifications'),  # New notifications view
+
 ]

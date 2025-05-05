@@ -3,23 +3,57 @@
 {% block title %}Add Task{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-8 mx-auto">
+<div class="row animate-fade">
+    <div class="col-lg-8 mx-auto">
         <div class="card">
-            <div class="card-header">
-                <h3><i class="fas fa-plus-circle"></i> Add Task</h3>
+            <div class="card-header bg-white">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-plus-circle me-2 text-primary"></i>
+                    <h4 class="mb-0">Add New Task</h4>
+                </div>
             </div>
             <div class="card-body">
-                <form method="POST">
+                <form method="POST" class="needs-validation" novalidate>
                     {% csrf_token %}
-                    <div class="mb-3">
+                    <div class="mb-4">
                         {{ form.as_p }}
                     </div>
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Add Task</button>
-                    <a href="{% url 'task_list' %}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Cancel</a>
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="fas fa-save me-2"></i>Save Task
+                        </button>
+                        <a href="{% url 'task_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    /* Task-specific styles */
+    .task-form label {
+        font-weight: 500;
+        color: #475569;
+        margin-bottom: 0.5rem;
+    }
+    
+    .task-form input, 
+    .task-form textarea, 
+    .task-form select {
+        border-radius: 8px;
+        padding: 10px 15px;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s;
+    }
+    
+    .task-form input:focus, 
+    .task-form textarea:focus, 
+    .task-form select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+    }
+</style>
 {% endblock %}

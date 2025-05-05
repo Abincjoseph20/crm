@@ -3,32 +3,83 @@
 {% block title %}{{ product_name }} Customers{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2><i class="fas fa-box"></i> {{ product_name }} Customers</h2>
-            <a href="{% url 'create_customer' %}" class="btn btn-primary"><i class="fas fa-plus"></i> New Customer</a>
-        </div>
-        
-        <div class="row">
-            {% for prd in product %}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ prd.f_name }} {{ prd.l_name }}</h5>
-                        <p class="card-text"><i class="fas fa-phone"></i> {{ prd.phone_num }}</p>
-                        <p class="card-text"><i class="fas fa-box"></i> {{ prd.get_product_display }}</p>
-                        <p class="card-text"><i class="fas fa-university"></i> {{ prd.get_bank_display }}</p>
-                        <p class="card-text"><i class="fas fa-info-circle"></i> {{ prd.get_status_display }}</p>
+<div class="row animate-fade">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-box me-3 text-primary" style="font-size: 1.5rem;"></i>
+                        <div>
+                            <h4 class="mb-0">{{ product_name }} Customers</h4>
+                            <p class="text-muted mb-0">Total: {{ product.count }} customers</p>
+                        </div>
                     </div>
-                    <div class="card-footer bg-transparent">
-                        <a href="{% url 'details' prd.pk %}" class="btn btn-sm btn-info"><i class="fas fa-eye"></i> Details</a>
-                        <a href="{% url 'edit' prd.pk %}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> Edit</a>
-                        <a href="{% url 'delete' prd.pk %}" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</a>
-                    </div>
+                    <a href="{% url 'create_customer' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>New Customer
+                    </a>
                 </div>
             </div>
-            {% endfor %}
+            
+            <div class="card-body">
+                {% if product %}
+                <div class="row">
+                    {% for prd in product %}
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                        <div class="card h-100 border-start border-4 
+                            {% if prd.product == 'HL' %}border-primary
+                            {% elif prd.product == 'PL' %}border-success
+                            {% elif prd.product == 'BL' %}border-warning
+                            {% elif prd.product == 'CL' %}border-info
+                            {% else %}border-secondary{% endif %}">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <h5 class="card-title mb-0">{{ prd.f_name }} {{ prd.l_name }}</h5>
+                                    <span class="badge bg-{% if prd.status == 'disp' %}success{% elif prd.status == 'reject' %}danger{% else %}warning{% endif %}">
+                                        {{ prd.get_status_display }}
+                                    </span>
+                                </div>
+                                
+                                <div class="customer-info">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-phone text-muted me-2"></i>
+                                        <span>{{ prd.phone_num }}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-university text-muted me-2"></i>
+                                        <span>{{ prd.get_bank_display }}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-calendar text-muted me-2"></i>
+                                        <span>Created: {{ prd.created_at|date:"M d, Y" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent border-0 d-flex justify-content-between">
+                                <a href="{% url 'details' prd.pk %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                                <div>
+                                    <a href="{% url 'edit' prd.pk %}" class="btn btn-sm btn-outline-warning me-1">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'delete' prd.pk %}" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                    <h5>No {{ product_name }} Customers Found</h5>
+                    <p class="text-muted">Click the button above to add a new customer</p>
+                </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
