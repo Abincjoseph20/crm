@@ -21,6 +21,14 @@ from django.shortcuts import render
 from datetime import datetime
 from .models import Customer, Task  # Make sure to import your models
 
+def Index(request):
+    return render(request,"index.html")
+
+def aboutus(request):
+    return render(request,"aboutus.html")
+
+def contact(request):
+    return render(request,"contact.html")
 
 def Home(request):
     # Step 1: Define the possible status choices
@@ -372,3 +380,5 @@ class get_count(View):
     # def status_qty(self, request):
     #     # You can similarly add context for this view if needed.
     #     return render(request, 'loan_status_distribution.html')
+
+
