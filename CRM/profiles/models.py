@@ -1,10 +1,6 @@
 from django.db import models
 # # Create your models here.
 
-
-
-
-
 class DSA(models.Model):
     dsa_name = models.CharField(max_length=50)
     dsa_code = models.CharField(max_length=50)

@@ -1,0 +1,22 @@
+<!-- templates/count_login_submit.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Submit Count</title>
+</head>
+<body>
+   {% for status, count in counts.items %}
+    <li>{{ status }}: {{ count }}</li>
+    {% endfor %}
+
+<ul>
+    <li>login_submit: {{ percentages.login_submit }}</li>
+    <li>login_complete: {{ percentages.login_complete }}</li>
+    <li>tec_completed: {{ percentages.tec_completed }}</li>
+    <li>legal_completed: {{ percentages.legal_completed }}</li>
+    <li>disp: {{ percentages.disp }}</li>
+    <li>reject: {{ percentages.reject }}</li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,63 @@
+<div class="row">
+    <!-- Recent Activities -->
+    <div class="col-lg-6 mb-4">
+        <div class="card dashboard-card h-100">
+            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Activities</h5>
+                <a href="#" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    {% for activity in recent_activities %}
+                    <div class="list-group-item border-0 py-3">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="bg-primary bg-opacity-10 p-2 rounded-circle">
+                                    <i class="fas fa-file-alt text-primary"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-1">{{ activity.title }}</h6>
+                                <p class="mb-0 text-muted small">{{ activity.description }}</p>
+                            </div>
+                            <span class="text-muted small">{{ activity.time }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Upcoming Tasks -->
+    <div class="col-lg-6 mb-4">
+        <div class="card dashboard-card h-100">
+            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Upcoming Tasks</h5>
+                <a href="{% url 'task_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    {% for task in upcoming_tasks %}
+                    <div class="list-group-item border-0 py-3">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                <div class="p-2 rounded-circle {% if task.priority == 'high' %}bg-danger bg-opacity-10{% elif task.priority == 'medium' %}bg-warning bg-opacity-10{% else %}bg-success bg-opacity-10{% endif %}">
+                                    <i class="fas {% if task.priority == 'high' %}fa-exclamation-circle text-danger{% elif task.priority == 'medium' %}fa-exclamation-triangle text-warning{% else %}fa-check-circle text-success{% endif %}"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-1">{{ task.title }}</h6>
+                                <p class="mb-0 text-muted small">Due: {{ task.due_date|date:"M d, Y" }}</p>
+                            </div>
+                            <span class="badge {% if task.status == 'completed' %}bg-success{% elif task.status == 'in_progress' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                {{ task.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

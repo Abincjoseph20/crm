@@ -96,31 +96,7 @@
     </div>
 </div>
 
-<div class="row">
-    <!-- Loan Status Distribution -->
-    <div class="col-xl-8 mb-4">
-        <div class="card dashboard-card h-100">
-            <div class="card-header bg-white border-0">
-                <h5 class="mb-0">Loan Status Distribution</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="statusChart" height="250"></canvas>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Product Mix -->
-    <div class="col-xl-4 mb-4">
-        <div class="card dashboard-card h-100">
-            <div class="card-header bg-white border-0">
-                <h5 class="mb-0">Product Mix</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="productChart" height="250"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
+{% include "loan_status_distribution.html" %}
 
 <div class="row">
     <!-- Recent Activities -->
@@ -300,17 +276,32 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // Status Distribution Chart
-    const statusCtx = document.getElementById('statusChart').getContext('2d');
-    const statusChart = new Chart(statusCtx, {
+    const ctx = document.getElementById('statusChart').getContext('2d');
+
+    const statusChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Login Submitted', 'Login Completed', 'Tec Completed', 'Legal Complete', 'Disbursed', 'Rejected'],
+            labels: [
+                "Login Submitted",
+                "Login Completed", 
+                "Tec Completed",
+                "Legal Completed",
+                "Disbursed",
+                "Rejected"
+            ],
             datasets: [{
-                label: 'Loan Count',
-                data: [45, 38, 32, 28, 22, 12],
+                label: "Loan Status (%)",
+                data: [
+                    {{ percentages.login_submit|default:"0" }},
+                    {{ percentages.login_complete|default:"0" }},
+                    {{ percentages.tec_completed|default:"0" }},
+                    {{ percentages.legal_completed|default:"0" }},
+                    {{ percentages.disp|default:"0" }},
+                    {{ percentages.reject|default:"0" }}
+                ],
                 backgroundColor: [
                     'rgba(54, 162, 235, 0.7)',
-                    'rgba(75, 192, 192, 0.7)',
+                    'rgba(75, 192, 192, 0.7)', 
                     'rgba(255, 206, 86, 0.7)',
                     'rgba(153, 102, 255, 0.7)',
                     'rgba(40, 167, 69, 0.7)',
@@ -319,7 +310,7 @@
                 borderColor: [
                     'rgba(54, 162, 235, 1)',
                     'rgba(75, 192, 192, 1)',
-                    'rgba(255, 206, 86, 1)',
+                    'rgba(255, 206, 86, 1)', 
                     'rgba(153, 102, 255, 1)',
                     'rgba(40, 167, 69, 1)',
                     'rgba(220, 53, 69, 1)'
@@ -332,50 +323,80 @@
             plugins: {
                 legend: {
                     display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.parsed.y + "% (" + 
+                                   Math.round((context.parsed.y * {{ total|default:"0" }}) / 100) + 
+                                   " customers)";
+                        }
+                    }
                 }
             },
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value + "%";
+                        }
+                    },
+                    max: 100
                 }
             }
         }
     });
 
-    // Product Mix Chart
-    const productCtx = document.getElementById('productChart').getContext('2d');
-    const productChart = new Chart(productCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['HL', 'PL', 'BL', 'CL', 'RF'],
-            datasets: [{
-                data: [35, 25, 20, 15, 5],
-                backgroundColor: [
-                    'rgba(54, 162, 235, 0.7)',
-                    'rgba(255, 99, 132, 0.7)',
-                    'rgba(255, 206, 86, 0.7)',
-                    'rgba(75, 192, 192, 0.7)',
-                    'rgba(153, 102, 255, 0.7)'
-                ],
-                borderColor: [
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                }
+    // Product Mix Chart (Fixed to use dynamic data)
+const productCtx = document.getElementById('productChart').getContext('2d');
+const productChart = new Chart(productCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['HL', 'PL', 'BL', 'CL', 'RF'],
+        datasets: [{
+            data: [
+                {{ product_percentages.HL|default:"0" }},
+                {{ product_percentages.PL|default:"0" }},
+                {{ product_percentages.BL|default:"0" }},
+                {{ product_percentages.CL|default:"0" }},
+                {{ product_percentages.RF|default:"0" }}
+            ],
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(255, 206, 86, 0.7)',
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(153, 102, 255, 0.7)'
+            ],
+            borderColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
             },
-            cutout: '70%'
-        }
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.label + ': ' + context.parsed + '% (' +
+                                Math.round((context.parsed * {{ product_total|default:"0" }}) / 100) +
+                                ' customers)';
+                    }
+                }
+            }
+        },
+        cutout: '70%'
+     }
     });
 </script>
 {% endblock %}

@@ -5,16 +5,95 @@ from django.utils import timezone
 from django.http import Http404
 from datetime import datetime,timedelta
 from datetime import timedelta
-
-
-
+import json
 from django.utils import timezone
 from datetime import datetime, timedelta
 from django.http import Http404
 from .models import Task
+from datetime import datetime, timedelta
+
+# views.py
+from django.db.models import Count
+from django.http import JsonResponse
+# from .models import Loan  # Import your Loan model
+
+from django.shortcuts import render
+from datetime import datetime
+from .models import Customer, Task  # Make sure to import your models
+
 
 def Home(request):
-    return render(request,'home1.html')
+    # Step 1: Define the possible status choices
+    statuses = [
+        'login_submit',
+        'login_complete', 
+        'tec_completed',
+        'legal_completed',
+        'disp',
+        'reject'
+    ]
+    
+    # Step 2: Count how many customers exist for each status
+    status_counts = {}
+    for status in statuses:
+        count = Customer.objects.filter(status=status).count()
+        status_counts[status] = count
+
+    # Step 3: Calculate the total number of customers (all statuses combined)
+    total = sum(status_counts.values())
+
+    # Step 4: Calculate percentage for each status safely (avoid division by zero)
+    status_percentages = {}
+    for status, count in status_counts.items():
+        if total > 0:
+            percentage = round((count / total) * 100, 2)
+        else:
+            percentage = 0
+        status_percentages[status] = percentage
+
+    
+    
+#----------------------------
+
+    products = [
+         'HL',
+         'PL',
+         'CL',
+         'BL',
+         'RF',
+    ]
+    
+    products_counts = {}
+    for product in products:
+        pro_count = Customer.objects.filter(product=product).count()
+        products_counts[product] = pro_count
+
+    # Step 3: Calculate the total number of customers (all statuses combined)
+    product_total = sum(products_counts.values())
+    
+    
+
+    product_percentages = {}
+    for product, pro_count in products_counts.items():
+        if product_total > 0:
+            pro_percentage = round((pro_count / product_total) * 100, 2)
+        else:
+            pro_percentage = 0
+        product_percentages[product] = pro_percentage
+        
+        
+        context = {
+        'counts': status_counts,            # Dictionary of status counts
+        'percentages': status_percentages,  # Dictionary of status percentages
+        'total': total,                     # Total number of customers
+        'products_counts':products_counts,
+        'product_percentages':product_percentages,
+        'product_total':product_total,  
+    }
+
+    # Step 9: Render the home1.html template with context data
+    return render(request, 'home1.html', context)
+
 
 def create_customer(request):
     if request.method == 'POST':
@@ -253,3 +332,43 @@ def upcoming_notifications(request):
         'upcoming_notifications': upcoming_tasks,
         'current_time': now,
     })
+    
+        
+
+class get_count(View):
+    def get(self,request):
+        statuses = [
+            'login_submit',
+            'login_complete',
+            'tec_completed',
+            'legal_completed',
+            'disp',
+            'reject'
+        ]
+        status_counts = {
+        status: Customer.objects.filter(status=status).count()
+        for status in statuses 
+        }
+        total = sum(status_counts.values())
+        print(total)
+        # Calculate percentages (handle division by zero)
+        status_percentages = {
+            status: round((count / total * 100), 2) if total > 0 else 0
+            for status, count in status_counts.items()
+        }
+        total = sum(status_counts.values())
+
+        status_names = dict(STATUS_CHOICES)
+        context = {
+            'counts': status_counts,
+            'percentages': status_percentages,
+            'status_names': status_names,
+            'total': total
+        }
+        return render(request,'count.html',context)
+
+
+    
+    # def status_qty(self, request):
+    #     # You can similarly add context for this view if needed.
+    #     return render(request, 'loan_status_distribution.html')
