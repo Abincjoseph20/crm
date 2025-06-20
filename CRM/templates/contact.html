@@ -593,11 +593,10 @@
                     <i class="fas fa-chart-line"></i>
                     Nexus<span>CRM</span>
                 </a>
-                
                 <ul class="nav-links">
-                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
-                    <li><a href="contact.html" class="active"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                    <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{% url 'aboutus' %}"><i class="fas fa-info-circle"></i> About Us</a></li>
+                    <li><a href="{% url 'contact' %}"><i class="fas fa-envelope"></i> Contact Us</a></li>
                     <li><a href="login.html" class="btn"><i class="fas fa-sign-in-alt"></i> Sign In</a></li>
                 </ul>
                 
