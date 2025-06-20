@@ -3,146 +3,262 @@
 {% block title %}Customer List{% endblock %}
 
 {% block content %}
-<div class="row animate-fade">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header bg-white">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-users me-3 text-primary" style="font-size: 1.5rem;"></i>
-                        <div>
-                            <h4 class="mb-0">Customer Management</h4>
-                            <p class="text-muted mb-0">Total: {{ customers.count }} customers</p>
+<div class="animate-fade">
+    <div class="container-fluid px-4">
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex align-items-center">
+                <div class="icon-shape bg-primary bg-gradient text-white rounded-3 me-3 p-3">
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+                <div>
+                    <h2 class="mb-0">Customer Management</h2>
+                    <p class="text-muted mb-0">Total: {{ customers.count }} customers</p>
+                </div>
+            </div>
+            <a href="{% url 'create_customer' %}" class="btn btn-primary btn-lg shadow">
+                <i class="fas fa-plus me-2"></i>New Customer
+            </a>
+        </div>
+
+        <!-- Filter/Search Bar -->
+       
+
+        <!-- Main Content -->
+        {% if customers %}
+        <div class="row">
+            {% for customer in customers %}
+            <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                <div class="card customer-card h-100 border-0 shadow-sm hover-shadow-lg transition-all">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center border-bottom-0 pb-0">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar avatar-lg me-3">
+                                <span class="avatar-initial rounded-circle bg-{% if customer.status == 'disp' %}success{% elif customer.status == 'reject' %}danger{% else %}warning{% endif %}-light text-{% if customer.status == 'disp' %}success{% elif customer.status == 'reject' %}danger{% else %}warning{% endif %}">
+                                    {{ customer.f_name|first }}{{ customer.l_name|first }}
+                                </span>
+                            </div>
+                            <div>
+                                <h5 class="mb-0">{{ customer.f_name }} {{ customer.l_name }}</h5>
+                                <span class="text-muted small">{{ customer.get_product_display }}</span>
+                            </div>
+                        </div>
+                        <span class="badge bg-{% if customer.status == 'disp' %}success{% elif customer.status == 'reject' %}danger{% else %}warning{% endif %} rounded-pill">
+                            {{ customer.get_status_display }}
+                        </span>
+                    </div>
+                    
+                    <div class="card-body pt-0">
+                        <div class="customer-details">
+                            <div class="detail-item d-flex align-items-center mb-3">
+                                <div class="icon-container bg-primary-light rounded-circle p-2 me-3">
+                                    <i class="fas fa-phone text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0 small text-muted">Phone</p>
+                                    <p class="mb-0 fw-bold">{{ customer.phone_num }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item d-flex align-items-center mb-3">
+                                <div class="icon-container bg-info-light rounded-circle p-2 me-3">
+                                    <i class="fas fa-university text-info"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0 small text-muted">Bank</p>
+                                    <p class="mb-0 fw-bold">{{ customer.get_bank_display }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item d-flex align-items-center">
+                                <div class="icon-container bg-secondary-light rounded-circle p-2 me-3">
+                                    <i class="fas fa-calendar text-secondary"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0 small text-muted">Created</p>
+                                    <p class="mb-0 fw-bold">{{ customer.created_at|date:"M d, Y" }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <a href="{% url 'create_customer' %}" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>New Customer
+                    
+                    <div class="card-footer bg-white border-top-0 pt-0 pb-3">
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'details' customer.pk %}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                <i class="fas fa-eye me-1"></i> Details
+                            </a>
+                            <div class="btn-group">
+                                <a href="{% url 'edit' customer.pk %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3 me-1">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'delete' customer.pk %}" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <div class="empty-state">
+                    <div class="empty-state-icon bg-primary-light text-primary">
+                        <i class="fas fa-users-slash fa-3x"></i>
+                    </div>
+                    <h3 class="mt-4">No Customers Found</h3>
+                    <p class="text-muted">You haven't added any customers yet. Get started by adding your first customer.</p>
+                    <a href="{% url 'create_customer' %}" class="btn btn-primary mt-3">
+                        <i class="fas fa-plus me-2"></i>Add Customer
                     </a>
                 </div>
             </div>
-            
+        </div>
+        {% endif %}
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="card shadow-sm mt-4">
             <div class="card-body">
-                {% if customers %}
-                <div class="row">
-                    {% for customer in customers %}
-                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                        <div class="card h-100 border-start border-4 
-                            {% if customer.status == 'disp' %}border-success
-                            {% elif customer.status == 'reject' %}border-danger
-                            {% else %}border-warning{% endif %}">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between mb-3">
-                                    <h5 class="card-title mb-0">{{ customer.f_name }} {{ customer.l_name }}</h5>
-                                    <span class="badge bg-{% if customer.status == 'disp' %}success{% elif customer.status == 'reject' %}danger{% else %}warning{% endif %}">
-                                        {{ customer.get_status_display }}
-                                    </span>
-                                </div>
-                                
-                                <div class="customer-info">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="fas fa-phone text-muted me-2"></i>
-                                        <span>{{ customer.phone_num }}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="fas fa-box text-muted me-2"></i>
-                                        <span>{{ customer.get_product_display }}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="fas fa-university text-muted me-2"></i>
-                                        <span>{{ customer.get_bank_display }}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-calendar text-muted me-2"></i>
-                                        <span>Created: {{ customer.created_at|date:"M d, Y" }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer bg-transparent border-0 d-flex justify-content-between">
-                                <a href="{% url 'details' customer.pk %}" class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-eye"></i> View
-                                </a>
-                                <div>
-                                    <a href="{% url 'edit' customer.pk %}" class="btn btn-sm btn-outline-warning me-1">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a href="{% url 'delete' customer.pk %}" class="btn btn-sm btn-outline-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% else %}
-                <div class="text-center py-5">
-                    <i class="fas fa-users-slash fa-3x text-muted mb-3"></i>
-                    <h5>No Customers Found</h5>
-                    <p class="text-muted">Click the button above to add your first customer</p>
-                </div>
-                {% endif %}
-            </div>
-            
-            {% if is_paginated %}
-            <div class="card-footer bg-white">
                 <nav aria-label="Page navigation">
                     <ul class="pagination justify-content-center mb-0">
                         {% if page_obj.has_previous %}
                         <li class="page-item">
                             <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
+                                <i class="fas fa-angle-left"></i>
                             </a>
                         </li>
                         {% else %}
                         <li class="page-item disabled">
                             <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                <span aria-hidden="true">&laquo;</span>
+                                <i class="fas fa-angle-left"></i>
                             </a>
                         </li>
                         {% endif %}
                         
                         {% for num in page_obj.paginator.page_range %}
                             {% if page_obj.number == num %}
-                            <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                            <li class="page-item active">
+                                <a class="page-link" href="#">{{ num }}</a>
+                            </li>
                             {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                            {% elif num == page_obj.paginator.num_pages %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                            {% elif num == 1 %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                            {% elif num == page_obj.number|add:'-4' or num == page_obj.number|add:'4' %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#"><i class="fas fa-ellipsis-h"></i></a>
+                            </li>
                             {% endif %}
                         {% endfor %}
                         
                         {% if page_obj.has_next %}
                         <li class="page-item">
                             <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
+                                <i class="fas fa-angle-right"></i>
                             </a>
                         </li>
                         {% else %}
                         <li class="page-item disabled">
                             <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                <span aria-hidden="true">&raquo;</span>
+                                <i class="fas fa-angle-right"></i>
                             </a>
                         </li>
                         {% endif %}
                     </ul>
                 </nav>
             </div>
-            {% endif %}
         </div>
+        {% endif %}
     </div>
 </div>
 
 <style>
+    /* Custom Styles */
+    :root {
+        --primary-color: #4361ee;
+        --primary-light: rgba(67, 97, 238, 0.1);
+        --success-light: rgba(40, 167, 69, 0.1);
+        --warning-light: rgba(255, 193, 7, 0.1);
+        --danger-light: rgba(220, 53, 69, 0.1);
+        --info-light: rgba(23, 162, 184, 0.1);
+        --secondary-light: rgba(108, 117, 125, 0.1);
+    }
+    
     .customer-card {
         transition: all 0.3s ease;
+        border-radius: 12px;
+        overflow: hidden;
     }
     
     .customer-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
     
-    .customer-info div {
-        padding: 0.3rem 0;
-        border-bottom: 1px solid #f8fafc;
+    .hover-shadow-lg {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .hover-shadow-lg:hover {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .transition-all {
+        transition: all 0.3s ease;
+    }
+    
+    .avatar-initial {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+    }
+    
+    .empty-state {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .empty-state-icon {
+        width: 100px;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 0 auto 1.5rem;
+    }
+    
+    .icon-shape {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .detail-item {
+        transition: all 0.3s ease;
+    }
+    
+    .detail-item:hover {
+        transform: translateX(5px);
+    }
+    
+    .icon-container {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     .page-item.active .page-link {
@@ -152,6 +268,49 @@
     
     .page-link {
         color: var(--primary-color);
+        border-radius: 8px !important;
+        margin: 0 3px;
+        min-width: 40px;
+        text-align: center;
+        border: none;
+    }
+    
+    .page-link:hover {
+        color: var(--primary-color);
+        background-color: var(--primary-light);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .customer-card {
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .avatar {
+            margin-bottom: 1rem;
+        }
     }
 </style>
+
+<script>
+    // Simple search functionality
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        const searchValue = this.value.toLowerCase();
+        const cards = document.querySelectorAll('.customer-card');
+        
+        cards.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            if (text.includes(searchValue)) {
+                card.parentElement.style.display = '';
+            } else {
+                card.parentElement.style.display = 'none';
+            }
+        });
+    });
+</script>
 {% endblock %}
